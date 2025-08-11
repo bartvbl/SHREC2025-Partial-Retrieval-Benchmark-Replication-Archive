@@ -54,10 +54,10 @@ def downloadDatasetsMenu():
         os.makedirs('input/download/', exist_ok=True)
 
         if choice == 1 or choice == 2:
-            downloadFile('https://ntnu.box.com/shared/static/rily0qg6tpzb9prym8ois0korr3x4vxa.7z',
+            downloadFile('https://ntnu.box.com/shared/static/ql21r340osh00dqy4atbju2u13ojt4vz.7z',
                          'precomputed_results.7z', 'precomputed_results/', 'Results computed by the author')
         if choice == 1 or choice == 3:
-            downloadFile('https://ntnu.box.com/shared/static/iqerttzman0eua0mrjxslxea8gt30ayu.7z', 'cache.7z',
+            downloadFile('https://ntnu.box.com/shared/static/p13szk6gx60zfi55qwmw4mkbifkx460p.7z', 'cache.7z',
                          'cache', 'Precomputed cache files')
         if choice == 4:
             return
