@@ -1,0 +1,10 @@
+# ninja log v5
+1	5129	1745611716644705584	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/interpolate_gpu.o	532159b3c1f8a95e
+0	5146	1745611716662705566	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/ball_query_gpu.o	8faa9ef6864273c5
+0	5185	1745611716701705527	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/group_points_gpu.o	2e5a0e07741a9ba9
+1	5437	1745611716954705277	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/sampling_gpu.o	71fb92a1f82554b0
+0	6974	1745611718463703781	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/group_points.o	ac836abe27668508
+0	6994	1745611718480703764	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/ball_query.o	e5b5ed7ab6670ec6
+0	7015	1745611718504703740	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/sampling.o	1209e55dbce573d5
+1	7059	1745611718552703692	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/interpolate.o	7594681db0aa7d23
+0	8144	1745611719637702615	/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-37/pointnet2_ops/_ext-src/src/bindings.o	d5dc27965c852bb1

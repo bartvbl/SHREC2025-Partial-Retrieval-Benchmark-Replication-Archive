@@ -1,0 +1,10 @@
+# ninja log v5
+0	4902	1743787679962095467	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/ball_query_gpu.o	307bfbdadbb09e4d
+1	4916	1743787679976095389	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/group_points_gpu.o	247f6b891557afa7
+1	5117	1743787680176094271	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/interpolate_gpu.o	6a7724308061c5b8
+1	5394	1743787680454092717	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/sampling_gpu.o	5423f0e1a45022a4
+1	7498	1743787682558080959	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/interpolate.o	15415b1aa8bfbd3d
+1	7596	1743787682655080417	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/group_points.o	8ce08c3966c52fd7
+0	7665	1743787682724080031	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/ball_query.o	64db4989257ef5a1
+1	7668	1743787682729080003	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/sampling.o	4cd3ed643ddccdfd
+0	8943	1743787684000072900	/home/bart/git/_external/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/bindings.o	cd6999dcaae6d20b

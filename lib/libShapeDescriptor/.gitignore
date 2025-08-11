@@ -1,0 +1,49 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+lib/*
+build/*
+.idea/*
+cmake-build-debug/*
+cmake-build-debug_/*
+cmake-build-release/*
+build-windows/*
+
+PIXEL_COUNTS/*
+misc/PIXEL_COUNTS/*
+
+# until further notice
+
+
+PIXEL_COUNTS/*
+misc/PIXEL_COUNTS/*

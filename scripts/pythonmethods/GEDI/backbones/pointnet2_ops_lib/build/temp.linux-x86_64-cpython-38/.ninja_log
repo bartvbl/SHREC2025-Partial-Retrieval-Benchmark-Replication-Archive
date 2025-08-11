@@ -1,0 +1,10 @@
+# ninja log v5
+1	6720	1743608123303919412	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/sampling_gpu.o	3acb4e115139ac0c
+0	6765	1743608123349921901	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/ball_query_gpu.o	82e7d171c7956a2c
+1	6916	1743608123500930072	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/group_points_gpu.o	1f0e832956cfa12d
+1	7559	1743608124142964812	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/interpolate_gpu.o	c9e262b94342337a
+0	8409	1743608124994010852	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/ball_query.o	592c7103e735a4d4
+1	8548	1743608125133018371	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/sampling.o	7d3c143b41c599df
+1	8987	1743608125572042117	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/interpolate.o	331ddc5a60a66a05
+0	10089	1743608126672101608	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/bindings.o	b4ad066edb8a8afe
+0	10107	1743608126693102744	/data/Software/gedi/backbones/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/group_points.o	88dea84c634a697f

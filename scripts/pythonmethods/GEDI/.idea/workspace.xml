@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0a5b4ff0-e01f-4c14-849f-134d10cb038b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../cfg/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../cfg/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../cfg/config_SHREC2025_base.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../cfg/config_SHREC2025_base.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/glm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_bmp2png.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_bmp2png.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_decode.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_decode.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_encode.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_encode.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_encode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_encode.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_png2bmp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_png2bmp.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_png_info.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_png_info.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_sdl.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_sdl.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_sdl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/examples/example_sdl.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_benchmark.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_benchmark.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_unittest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_unittest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_util.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_util.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_util.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/lodepng_util.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/pngdetail.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/lodepng/pngdetail.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.clang-format" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.clang-format" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/ISSUE_TEMPLATE/bug_report.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/ISSUE_TEMPLATE/bug_report.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/ISSUE_TEMPLATE/feature_request.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/ISSUE_TEMPLATE/feature_request.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/workflows/build.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/workflows/cifuzz.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/workflows/cifuzz.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/workflows/release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.github/workflows/release.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/LICENSE.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/LICENSE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/codecov.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/demo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/demo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/simplify.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/simplify.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/demo/tests.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/extern/cgltf.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/extern/cgltf.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/extern/fast_obj.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/extern/fast_obj.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/animation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/animation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/basisenc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/basisenc.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/basislib.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/basislib.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/cli.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/cli.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/gltfpack.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/gltfpack.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/gltfpack.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/gltfpack.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/image.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/image.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/json.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/json.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/library.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/library.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/material.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/material.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/mesh.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/node.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/parsegltf.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/parsegltf.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/parseobj.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/parseobj.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/stream.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/stream.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/write.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/gltf/write.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/benchmark.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/benchmark.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/index.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/index.module.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/index.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/index.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.module.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder_reference.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_decoder_reference.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.module.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_encoder.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.module.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/meshopt_simplifier.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/js/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/allocator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/allocator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/clusterizer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/clusterizer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/indexcodec.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/indexcodec.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/indexgenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/indexgenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/meshoptimizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/meshoptimizer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/overdrawanalyzer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/overdrawanalyzer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/quantization.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/quantization.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/simplifier.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/simplifier.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/stripifier.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/stripifier.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/vcacheoptimizer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/vcacheoptimizer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/vertexcodec.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/vertexcodec.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/vertexfilter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/src/vertexfilter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/bitmask.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/bitmask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/codecbench.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/codecbench.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/codecfuzz.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/codecfuzz.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/meshloader.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/wasmstubs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/meshoptimizer/tools/wasmstubs.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/.travis-before-install.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/.travis.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/examples/glview/glview.cc" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/examples/glview/glview.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/stb_image_write.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/stb_image_write.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/tests/tester.cc" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/tests/tester.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/tiny_gltf.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lib/libShapeDescriptor/lib/tinygltf/tiny_gltf.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../src/main.cu" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/main.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../tools/executionTimeVariation/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../tools/executionTimeVariation/main.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2z2lRXSODinCSf1PYHjNdozBaRs" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feature-micci-method",
+    "last_opened_file_path": "/home/bart/git/Shapebench-extended/scripts/pythonmethods/GEDI",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-PY-251.26094.141" />
+        <option value="bundled-python-sdk-9f8e2b94138c-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26094.141" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0a5b4ff0-e01f-4c14-849f-134d10cb038b" name="Changes" comment="" />
+      <created>1750937040673</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1750937040673</updated>
+      <workItem from="1750937041870" duration="5590000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
