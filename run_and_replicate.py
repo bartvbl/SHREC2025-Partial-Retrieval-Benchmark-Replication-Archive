@@ -271,7 +271,7 @@ def generateRadiusReplicationSettingsString(config):
         return 'nothing is replicated'
 
 allMethods = ['QUICCI', 'RICI', 'SI', 'SHOT', 'GEDI', 'COPS', 'MICCI-Triangle', 'MICCI-PointCloud']
-originalExperiments = [
+trackExperiments = [
     ('experiment1-level1-occlusion-only',                'Experiment 1: Single occlusion filter'),
     ('experiment2-level1-clutter-only',                  'Experiment 2: Single clutter filter'),
     ('experiment3-level1-gaussian-noise-only',           'Experiment 3: Single gaussian noise filter'),
@@ -338,7 +338,7 @@ def replicateSupportRadiusFigures(config_file_to_edit):
                 config = json.load(infile)
             for method in allMethods:
                 config['methodSettings'][method]['enabled'] = method == methodName
-            for index, experiment in enumerate(originalExperiments):
+            for index, experiment in enumerate(trackExperiments):
                 config['experimentsToRun'][index]['enabled'] = False
             with open(radiusConfigFile, 'w') as outfile:
                 json.dump(config, outfile, indent=4)
@@ -393,7 +393,7 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
             'Edit replication settings (shortcut to same option in main menu)']
             + ['Subfigure ({}): {}'.format(list('abcdef')[index], method) for index, method in enumerate(allMethods)] + [
             "back"],
-            title='------------------ Replicate Figure {}: {} ------------------'.format(7 + figureIndex, originalExperiments[figureIndex][1]))
+            title='------------------ Replicate Figure {}: {} ------------------'.format(7 + figureIndex, trackExperiments[figureIndex][1]))
 
         choice = replication_menu.show() + 1
 
@@ -403,7 +403,7 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
         if choice > 1 and choice < len(allMethods) + 2:
             methodIndex = choice - 2
             methodName = allMethods[methodIndex]
-            precomputedResultsDir = os.path.join('precomputed_results', originalExperiments[figureIndex][0])
+            precomputedResultsDir = os.path.join('precomputed_results', trackExperiments[figureIndex][0])
             resultFiles = [x for x in os.listdir(precomputedResultsDir) if methodName in x]
             if len(resultFiles) != 1:
                 raise Exception('There should be exactly one result file for each method in the precomputed results directory. Found {}.'.format(len(resultFiles)))
@@ -423,9 +423,12 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
             return
 
 def replicateExperimentsFigures(config_file_to_edit):
+    figureNumbers = [
+        '9', '10', '11', '12 and 13', '14', '15', '16 and 17', '18 and 19', '20'
+    ]
     experiments_menu = TerminalMenu([
         "Edit replication settings (shortcut to same option in main menu)"] +
-        ['Replicate Figure {}: {}'.format(index + 7, x[1]) for index, x in enumerate(originalExperiments)]
+        ['Replicate {} (Figure {})'.format(x[1], figureNumbers[index]) for index, x in enumerate(trackExperiments)]
         + ['Generate charts from precomputed results',
            'back'],
         title='------------------ Replicate Benchmark Results ------------------')
@@ -434,21 +437,31 @@ def replicateExperimentsFigures(config_file_to_edit):
         choice = experiments_menu.show() + 1
         if choice == 1:  #
             changeReplicationSettings(config_file_to_edit)
-        if choice > 1 and choice <= len(originalExperiments) + 1:
+        if choice > 1 and choice <= len(trackExperiments) + 1:
             replicateExperimentResults(choice - 2, config_file_to_edit)
-        if choice == len(originalExperiments) + 2:  #
+        if choice == len(trackExperiments) + 2:  #
             runCharter()
-        if choice == len(originalExperiments) + 3:  #
+        if choice == len(trackExperiments) + 3:  #
             return
+
+
+def replicateExecutionTimes(config_file_to_edit):
+    pass
+
+
+def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
+    pass
+
 
 def runReplication(config_file_to_edit):
     while True:
         menu = TerminalMenu([
             "1. Change replication settings",
-            "2. Replicate Figure 1 - Similarity visualisation",
-            "3. Replicate Figure 4 - Support radius estimation",
-            "4. Replicate Figure 7 to 16 - Benchmark results for various filter configurations",
-            "5. back"
+            "2. Replicate Figure 5 - Variation in execution times",
+            "3. Replicate Figure 6 - Generate synthetic execution time meshes",
+            "4. Replicate Figure 9 to 20 - Benchmark results for experiments",
+            "5. Replicate Figure 21 and 22 - Execution times",
+            "6. back"
         ], title='---------------------- Replication Menu ----------------------')
 
         choice = menu.show() + 1
@@ -457,25 +470,17 @@ def runReplication(config_file_to_edit):
             case 1:
                 changeReplicationSettings(config_file_to_edit)
             case 2:
-                replicateSimilarityVisualisationFigure()
+                replicateExecutionTimeVariabilityCharts(config_file_to_edit)
             case 3:
                 replicateSupportRadiusFigures(config_file_to_edit)
             case 4:
                 replicateExperimentsFigures(config_file_to_edit)
             case 5:
+                replicateExecutionTimes(config_file_to_edit)
+            case 6:
                 return
 
-trackExperiments = [
-    ('', 'Occlusion'),
-    ('', 'Clutter'),
-    ('', 'Gaussian noise'),
-    ('', 'Occlusion+Gaussian noise'),
-    ('', 'Occlusion and Occlusion'),
-    ('', 'Occlusion+fixed Gaussian noise and Occlusion+fixed Gaussian noise'),
-    ('', 'Occlusion and Occlusion+Clutter'),
-    ('', 'Occlusion+fixed Gaussian noise and Occlusion+Clutter+fixed Gaussian noise'),
-    ('', 'Occlusion+less Clutter+fixed Gaussian+Alternate triangulation'),
-]
+
 
 # Run the experiment
 
@@ -605,9 +610,9 @@ def listExperimets(config_file_to_edit, expList):
 def enableExperimentsToRun(config_file_to_edit):
     # check if there are custom experiments
     
-    #originalExperimentsName = [experiment[0] for experiment in originalExperiments]
+    #trackExperiments = [experiment[0] for experiment in trackExperiments]
     #trackExperimentsName = [experiment[0] for experiment in trackExperiments]
-    #defaultsExperiments = originalExperimentsName + trackExperimentsName
+    #defaultsExperiments = trackExperiments + trackExperimentsName
 
     while True:
         config = readConfigFile(config_file_to_edit)
