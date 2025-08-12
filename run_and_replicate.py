@@ -270,7 +270,7 @@ def generateRadiusReplicationSettingsString(config):
     else:
         return 'nothing is replicated'
 
-allMethods = ['QUICCI', 'RICI', 'SI', 'SHOT', 'GEDI', 'COPS', 'MICCI-Triangle', 'MICCI-PointCloud']
+allMethods = ['QUICCI', 'RICI', 'SHOT', 'COPS', 'GeDI', 'SI', 'MICI-Triangle', 'MICI-PointCloud']
 trackExperiments = [
     ('experiment1-level1-occlusion-only',                'Experiment 1: Single occlusion filter'),
     ('experiment2-level1-clutter-only',                  'Experiment 2: Single clutter filter'),
@@ -308,71 +308,6 @@ def editSupportRadiusExtent(config):
     print()
     return config
 
-def replicateSupportRadiusFigures(config_file_to_edit):
-    config = readConfigFile(config_file_to_edit)
-    radiusConfigFile = 'cfg/config_support_radius_replication.json'
-    if not os.path.isfile(radiusConfigFile):
-        with open(radiusConfigFile, 'w') as outfile:
-            json.dump(config, outfile, indent=4)
-
-    while True:
-        download_menu = TerminalMenu([
-            'Select replication extent. Currently selected: ' + generateRadiusReplicationSettingsString(config)]
-            + ['Run replication for method ' + x for x in allMethods] + [
-             'Generate charts from precomputed support radius CSV files',
-             'back'],
-            title='------------------ Replicate Support Radius Figures ------------------')
-
-        choice = download_menu.show() + 1
-
-        if choice == 1:
-            config = editSupportRadiusExtent(config)
-            with open(radiusConfigFile, 'w') as outfile:
-                json.dump(config, outfile, indent=4)
-        if choice > 1 and choice <= len(allMethods) + 1:
-            methodIndex = choice - 2
-            methodName = allMethods[methodIndex]
-
-            # Edit config file to only select the selected method
-            with open(radiusConfigFile, 'r') as infile:
-                config = json.load(infile)
-            for method in allMethods:
-                config['methodSettings'][method]['enabled'] = method == methodName
-            for index, experiment in enumerate(trackExperiments):
-                config['experimentsToRun'][index]['enabled'] = False
-            with open(radiusConfigFile, 'w') as outfile:
-                json.dump(config, outfile, indent=4)
-
-            run_command_line_command('./shapebench --configuration-file=../cfg/config_support_radius_replication.json', 'bin')
-
-            supportRadiusResultFiles = \
-                ['support_radii_meanvariance_QUICCI_20240521-041001.txt',
-                 'support_radii_meanvariance_RICI_20240520-235415.txt',
-                 'support_radii_meanvariance_RoPS_20240521-173103.txt',
-                 'support_radii_meanvariance_SHOT_20240531-200850.txt',
-                 'support_radii_meanvariance_SI_20240522-033710.txt',
-                 'support_radii_meanvariance_USC_20240529-135954.txt']
-
-            print()
-            print('Contents of the support radius file computed by the author:')
-            print()
-            run_command_line_command('cat precomputed_results/support_radius_estimation/' + supportRadiusResultFiles[methodIndex])
-            print()
-            print('You should compare the line(s) printed out by the replication run to the corresponding line in the file here.')
-            print()
-
-        if choice == len(allMethods) + 2:
-            os.makedirs('output/charts', exist_ok=True)
-            run_command_line_command('python3 tools/charter/charter.py '
-                                     '--results-directory=precomputed_results/support_radius_estimation '
-                                     '--output-dir=output/charts '
-                                     '--mode=support-radius', '.')
-            print()
-            print('Charts created. You can find them in the output/charts directory.')
-            print()
-        if choice == len(allMethods) + 3:
-            return
-
 def runCharter():
     os.makedirs('output/charts', exist_ok=True)
     run_command_line_command('python3 tools/charter/charter.py --output-dir=output/charts --results-directory=precomputed_results')
@@ -391,7 +326,7 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
         print()
         replication_menu = TerminalMenu([
             'Edit replication settings (shortcut to same option in main menu)']
-            + ['Subfigure ({}): {}'.format(list('abcdef')[index], method) for index, method in enumerate(allMethods)] + [
+            + ['Subfigure ({}): {}'.format(list('abcdefgh')[index], method) for index, method in enumerate(allMethods)] + [
             "back"],
             title='------------------ Replicate Figure {}: {} ------------------'.format(7 + figureIndex, trackExperiments[figureIndex][1]))
 
@@ -413,7 +348,7 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
             enableVisualisations = config['filterSettings']['additiveNoise']['enableDebugCamera']
             commandPreamble = 'xvfb-run ' if not enableVisualisations else ''
             run_command_line_command(commandPreamble + './shapebench --replicate-results-file=../{} --configuration-file=../{}'.format(fileToReplicate, config_file_to_edit), 'bin')
-            print('./shapebench --replicate-results-file=../{} --configuration-file=../{}'.format(fileToReplicate, config_file_to_edit))
+            print(commandPreamble + './shapebench --replicate-results-file=../{} --configuration-file=../{}'.format(fileToReplicate, config_file_to_edit))
             print()
             print('Complete.')
             print('If you enabled any replication options in the settings, these have been successfully replicated if you did not receive a message about it, or the program has exited with an exception.')
@@ -438,6 +373,11 @@ def replicateExperimentsFigures(config_file_to_edit):
         if choice == 1:  #
             changeReplicationSettings(config_file_to_edit)
         if choice > 1 and choice <= len(trackExperiments) + 1:
+            if choice == len(trackExperiments) + 1:
+                print()
+                print('Note: this figure does not have any subfigures like the others do, but it was easier to reuse the same bit of code for replicating the results')
+                print('The overview chart is based on all result sets combined, so you can replicate and verify those individually, just note that the menu lists non-existing subfigures.')
+                print()
             replicateExperimentResults(choice - 2, config_file_to_edit)
         if choice == len(trackExperiments) + 2:  #
             runCharter()
@@ -450,6 +390,10 @@ def replicateExecutionTimes(config_file_to_edit):
 
 
 def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
+    pass
+
+
+def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
     pass
 
 
@@ -472,7 +416,7 @@ def runReplication(config_file_to_edit):
             case 2:
                 replicateExecutionTimeVariabilityCharts(config_file_to_edit)
             case 3:
-                replicateSupportRadiusFigures(config_file_to_edit)
+                replicateSyntheticExecutionTimeMeshes(config_file_to_edit)
             case 4:
                 replicateExperimentsFigures(config_file_to_edit)
             case 5:

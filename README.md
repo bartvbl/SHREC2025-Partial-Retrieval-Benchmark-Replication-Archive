@@ -21,7 +21,7 @@ Refer to the included PDF file for information about replicating the results pro
 ### System requirements
 * 32GB of RAM (64GB is highly recommended)
 * The project has been tested on Linux Mint 22.1.
-* The CUDA SDK must be installed, but no GPU is required to run the benchmark
+* The CUDA SDK must be installed, but no GPU is required to run the benchmark, except for methods that utilise machine learning
 
 There's nothing that should prevent the project to be compiled on Windows, but it has not been tested.
 
