@@ -1,16 +1,16 @@
-# ShapeBench: a new approach to benchmarking local 3D shape descriptors
+# SHREC 2025: Partial Retrieval Benchmark - Replication Archive
 
 This is the code repository for the evaluation strategy described in the paper:
 
-van Blokland BI. ShapeBench: A new approach to benchmarking local 3D shape descriptors. Computers & Graphics. 2024 Aug 22:104052.
+(TODO)
 
-[Link to paper](https://doi.org/10.1016/j.cag.2024.104052)
+[Link to paper](https://todo)
 
 ### Getting started
 
 Clone the repository using the --recursive flag:
 ```
-git clone https://github.com/bartvbl/ShapeBench --recursive
+git clone https://github.com/bartvbl/SHREC2025-Partial-Retrieval-Benchmark-Replication-Archive --recursive
 ```
 You should subsequently run the python script to install dependencies, compile the project, and download precompiled cache files. You can use the following command to do so:
 ```
@@ -20,7 +20,7 @@ Refer to the included PDF file for information about replicating the results pro
 
 ### System requirements
 * 32GB of RAM (64GB is highly recommended)
-* The project has been tested on Linux Mint 21.3.
+* The project has been tested on Linux Mint 22.1.
 * The CUDA SDK must be installed, but no GPU is required to run the benchmark
 
 There's nothing that should prevent the project to be compiled on Windows, but it has not been tested.
@@ -29,19 +29,12 @@ While many of the experiments and filters will run on a system with 32GB of RAM,
 
 ### Abstract
 
-The ShapeBench evaluation methodology is proposed as an extension to the popular Area Under Precision-Recall Curve (PRC/AUC) for measuring the matching performance of local 3D shape descriptors. It is observed that the PRC inadequately accounts for other similar surfaces in the same or different objects when determining whether a candidate match is a true positive. The novel Descriptor Distance Index (DDI) metric is introduced to address this limitation. In contrast to previous evaluation methodologies, which identify entire objects in a given scene, the DDI metric measures descriptor performance by analysing point-to-point distances. The ShapeBench methodology is also more scalable than previous approaches, by using procedural generation. The benchmark is used to evaluate both old and new descriptors. The results produced by the implementation of the benchmark are fully replicable, and are made publicly available.
+Partial retrieval is a long-standing problem in the 3D Object Retrieval community. Its main difficulties arise from how to define 3D local descriptors in a way that makes them effective for partial retrieval and robust to common real-world issues, such as occlusion, noise, or clutter, when dealing with 3D data. This SHREC track is based on the newly proposed ShapeBench benchmark to evaluate the matching performance of local descriptors. We propose an experiment consisting of three increasing levels of difficulty, where we combine different filters to simulate real-world issues related to the partial retrieval task. Our main findings show that classic 3D local descriptors like Spin Image are robust to several of the tested filters (and their combinations), but more recent learned local descriptors like GeDI can be competitive for some specific filters. Finally, no 3D local descriptor was able to successfully handle the hardest level of difficulty.
 
 ### Citation
 
 ```
-@article{van2024shapebench,
-  title={ShapeBench: A new approach to benchmarking local 3D shape descriptors},
-  author={van Blokland, Bart Iver},
-  journal={Computers \& Graphics},
-  pages={104052},
-  year={2024},
-  publisher={Elsevier}
-}
+(TODO)
 ```
 
 ### Troubleshooting
