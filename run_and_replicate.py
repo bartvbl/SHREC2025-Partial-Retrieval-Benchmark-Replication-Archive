@@ -281,7 +281,7 @@ def generateRadiusReplicationSettingsString(config):
     else:
         return 'nothing is replicated'
 
-allMethods = ['QUICCI', 'RICI', 'SI', 'RoPS', 'SHOT', 'USC']
+allMethods = ['QUICCI', 'RICI', 'SI', 'SHOT', 'GEDI', 'COPS', 'MICCI-Triangle', 'MICCI-PointCloud']
 originalExperiments = [
     ('additive-noise-only', 'Clutter'),
     ('subtractive-noise-only', 'Occlusion'),

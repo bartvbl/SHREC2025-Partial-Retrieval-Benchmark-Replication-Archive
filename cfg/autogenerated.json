@@ -1,0 +1,33 @@
+{
+    "COPS": {
+        "supportRadius": 0.5
+    },
+    "GEDI": {
+        "supportRadius": 0.5
+    },
+    "MICCI-Triangle": {
+        "supportRadius": 0.5
+    },
+    "MICCI-PointCloud": {
+        "supportRadius": 0.5
+    },
+    "QUICCI": {
+        "supportRadius": 0.38999998569488525
+    },
+    "RICI": {
+        "supportRadius": 0.255
+    },
+    "SHOT": {
+        "supportRadius": 0.14999999105930328
+    },
+    "RoPS": {
+        "supportRadius": 0.6749999523162842
+    },
+    "SI": {
+        "supportRadius": 0.809999942779541
+    },
+    "USC": {
+        "supportRadius": 0.13499999046325684
+    },
+    "version": 1.0
+}
