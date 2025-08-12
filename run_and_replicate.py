@@ -283,16 +283,15 @@ def generateRadiusReplicationSettingsString(config):
 
 allMethods = ['QUICCI', 'RICI', 'SI', 'SHOT', 'GEDI', 'COPS', 'MICCI-Triangle', 'MICCI-PointCloud']
 originalExperiments = [
-    ('additive-noise-only', 'Clutter'),
-    ('subtractive-noise-only', 'Occlusion'),
-    ('repeated-capture-only', 'Alternate triangulation'),
-    ('normal-noise-only', 'Deviated normal vector'),
-    ('support-radius-deviation-only', 'Deviated support radius'),
-    ('gaussian-noise-only', 'Gaussian noise'),
-    ('depth-camera-capture-only', 'Alternate mesh resolution'),
-    ('additive-and-subtractive-noise', 'Clutter and Occlusion'),
-    ('additive-and-gaussian-noise', 'Clutter and Gaussian noise'),
-    ('subtractive-and-gaussian-noise', 'Occlusion and Gaussian noise')
+    ('experiment1-level1-occlusion-only',                'Experiment 1: Single occlusion filter'),
+    ('experiment2-level1-clutter-only',                  'Experiment 2: Single clutter filter'),
+    ('experiment3-level1-gaussian-noise-only',           'Experiment 3: Single gaussian noise filter'),
+    ('experiment4-level2-occlusion-and-gaussian-noise',  'Experiment 4: Occlusion and Gaussian noise filter'),
+    ('experiment5-level2-occlusion-both',                'Experiment 5: Occlusion on both objects'),
+    ('experiment6-level2-occlusion-fixed-gaussian-both', 'Experiment 6: Occlusion and fixed level of gaussian noise on both objects'),
+    ('experiment7-level2-occlusion-both-clutter',        'Experiment 7: Occlusion on both objects, clutter on one object'),
+    ('experiment8-level2-occlusion-noise-both-clutter',  'Experiment 8: Occlusion and fixed level of gaussian noise on both objects, clutter on one object'),
+    ('experiment9-level3-ultimate-test',                 'Experiment 9: Occlusion, two clutter objects, fixed level gaussian noise, and vertex perturbation')
 ]
 
 def editSupportRadiusExtent(config):
