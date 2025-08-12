@@ -45,8 +45,8 @@ def downloadFile(fileURL, tempFile, extractInDirectory, name, unzipCommand = 'p7
 def downloadDatasetsMenu():
     download_menu = TerminalMenu([
         "Download all",
-        "Download computed results (7.4GB download, 81.7GB uncompressed)",
-        "Download cache files (7.4GB download, 8.4GB uncompressed)",
+        "Download computed results (4.7GB download, 83.4GB uncompressed)",
+        "Download cache files (4.0GB download, 4.4GB uncompressed)",
         "back"], title='------------------ Download Datasets ------------------')
 
     while True:
@@ -55,7 +55,7 @@ def downloadDatasetsMenu():
 
         if choice == 1 or choice == 2:
             downloadFile('https://ntnu.box.com/shared/static/ql21r340osh00dqy4atbju2u13ojt4vz.7z',
-                         'precomputed_results.7z', 'precomputed_results/', 'Results computed by the author')
+                         'precomputed_results.7z', 'precomputed_results/', 'Results computed by the authors')
         if choice == 1 or choice == 3:
             downloadFile('https://ntnu.box.com/shared/static/p13szk6gx60zfi55qwmw4mkbifkx460p.7z', 'cache.7z',
                          'cache', 'Precomputed cache files')
@@ -257,17 +257,6 @@ def changeReplicationSettings(config_file_to_edit):
         if choice == 11:
             writeConfigFile(config, config_file_to_edit)
             return
-
-def replicateSimilarityVisualisationFigure():
-    #downloadFile('http://graphics.stanford.edu/pub/3Dscanrep/armadillo/Armadillo.ply.gz', 'armadillo.ply.gz', os.path.abspath('input/figure1'), 'Figure 1 armadillo model', 'gunzip -c {} > ./armadillo.ply')
-    os.makedirs('output/figure1', exist_ok=True)
-    run_command_line_command('../../bin/armadillo ../../input/figure1/Armadillo_vres2_small_scaled_0.ply', 'output/figure1')
-    gradientImageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAgAAAAABCAYAAACouxZ2AAABbmlDQ1BpY2MAACiRdZHPKwRhGMc/u1bEag8cJIc5IIdVQnJkHVw2aVEWl5kxu6tm1zQzm+SqXByUg7j4dfAfcFWulFKkJEdnvy7SeF67tZvWO73zfPq+7/fpfb8vhJO2mfci/ZAv+G5qIqHNpee1hhci1BNliCbd9Jyxqakk/47PO0Kq3vapXv/vqzmalyzPhFCj8LDpuL7wqHBy1XcUbwm3mTl9SfhQOO7KAYWvlG6U+FlxtsTvit2Z1DiEVU8tW8VGFZs5Ny/cK9yVt4tm+TzqJlGrMDsttUNmJx4pJkigYVBkGRufPqkFyay2r//XN8mKeEz5O6zhiiNLTrxxUYvS1ZKaEd2Sz2ZN5f43Ty8zOFDqHk1A/VMQvHVDww58bwfB11EQfB9D3SNcFCr+Fclp5EP07YrWdQCxDTi7rGjGLpxvQvuDo7v6r1QnM5zJwOsptKSh9QaaFkpZldc5uYeZdXmia9jbhx7ZH1v8AcVWZ+8Oq3sSAAAACXBIWXMAAA9hAAAPYQGoP6dpAAAAKElEQVRIx2P8/+/ffwYY+P8fgpH5o/QoTSk9Ggaj9GjaHKVH6UGXRgGGtvwRQRE4UwAAAABJRU5ErkJggg=='
-    decodedGradientImage = base64.b64decode(gradientImageBase64)
-    with open('output/figure1/gradient.png', 'wb') as output_file:
-        output_file.write(decodedGradientImage)
-    print('Done. The output file has been written to: output/figure1/armadillo.obj')
-    print()
 
 def generateRadiusReplicationSettingsString(config):
     if config['replicationOverrides']['supportRadius']['recomputeEntirely']:
