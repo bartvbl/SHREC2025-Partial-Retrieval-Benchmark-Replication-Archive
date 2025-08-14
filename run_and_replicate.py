@@ -18,8 +18,10 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 8):
     print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
     sys.exit(1)
 
-os.makedirs('input/objaverse-cache', exist_ok=True)
-os.makedirs('input/objaverse-uncompressed', exist_ok=True)
+script_dir = os.path.dirname(__file__)
+os.makedirs(os.path.join(script_dir, 'input/objaverse-cache'), exist_ok=True)
+os.makedirs(os.path.join(script_dir, 'input/objaverse-uncompressed'), exist_ok=True)
+os.makedirs(os.path.join(script_dir, 'input/download'), exist_ok=True)
 
 def run_command_line_command(command, working_directory='.'):
     print('>> Executing command:', command)
@@ -31,7 +33,6 @@ def ask_for_confirmation(message):
     return choice == 0
 
 def downloadFile(fileURL, tempFile, extractInDirectory, name, unzipCommand = 'p7zip -k -d {}'):
-    os.makedirs('input/download', exist_ok=True)
     if not os.path.isfile('input/download/' + tempFile) or ask_for_confirmation('It appears the ' + name + ' archive file has already been downloaded. Would you like to download it again?'):
         print('Downloading the ' + name + ' archive file..')
         run_command_line_command('wget --output-document ' + tempFile + ' ' + fileURL, 'input/download/')
@@ -270,7 +271,7 @@ def generateRadiusReplicationSettingsString(config):
     else:
         return 'nothing is replicated'
 
-allMethods = ['QUICCI', 'RICI', 'SHOT', 'COPS', 'GeDI', 'SI', 'MICI-Triangle', 'MICI-PointCloud']
+allMethods = ['QUICCI', 'RICI', 'SHOT', 'COPS', 'GeDI', 'SI', 'MICCI-Triangle', 'MICCI-PointCloud']
 trackExperiments = [
     ('experiment1-level1-occlusion-only',                'Experiment 1: Single occlusion filter'),
     ('experiment2-level1-clutter-only',                  'Experiment 2: Single clutter filter'),
