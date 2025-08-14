@@ -535,7 +535,7 @@ void testMethod(const ShapeBench::BenchmarkConfiguration& setup, ShapeBench::Loc
 
     std::cout << "Measuring execution time.." << std::endl;
 
-    if(configuration.at("executionTimeMeasurement").at("enabled")) {
+    if(configuration.contains("executionTimeMeasurement") && configuration.at("executionTimeMeasurement").at("enabled")) {
         ShapeBench::computeDescriptorMethodExecutionTime<DescriptorMethod, DescriptorType>(configuration, dataset, fileCache, executionTimeRandomSeed, supportRadius, referenceDescriptors);
     } else {
         std::cout << "    Disabled. Skipping." << std::endl;
