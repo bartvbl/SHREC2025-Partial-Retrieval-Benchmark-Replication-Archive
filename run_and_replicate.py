@@ -463,13 +463,13 @@ def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
     showExecutionTimesNotice()
 
     config = readConfigFile(config_file_to_edit)
-    config["methodSettings"]["SI"]["enabled"] = True
+    config["methodSettings"]["SHOT"]["enabled"] = True
     writeConfigFile(config, config_file_to_edit)
 
     runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
 
     config = readConfigFile(config_file_to_edit)
-    config["methodSettings"]["SI"]["enabled"] = False
+    config["methodSettings"]["SHOT"]["enabled"] = False
     writeConfigFile(config, config_file_to_edit)
 
 
