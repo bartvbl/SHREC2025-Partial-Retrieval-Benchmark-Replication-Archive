@@ -1133,79 +1133,78 @@ def executionTimeChart(results_directory, output_directory, mode):
     jsonFilePaths.sort()
     
     for jsonFile in jsonFilePaths:
-        if jsonFile == "execution-time-measuraments": #check how the file is named
-            with open(os.path.join(results_directory, jsonFile)) as inFile:
-                print('Loading file: {}'.format(jsonFile))
-                jsonContents = json.load(inFile)
-                settings = getProcessingSettings(mode, jsonContents)
-                print('Creating chart for method ' + settings.methodName + "..")
-                
-                deltaX = (settings.xAxisMax - settings.xAxisMin) / settings.binCount
-                
-                results = []
-                
-                for result in jsonContents["results"]:
-                    results.append([settings.readVauleX(result), jsonContents["results"]["executionTimeInMS"]])
-                
-                histogram = []
-                for _ in range(settings.binCount):
-                    histogram.append([])
-                    
-                for result in results:
-                    if result[0] is None:
-                        result[0] = 0
-                    if result[0] < settings.xAxisMin or result[0] > settings.xAxisMax:
-                        if settings.xAxisOutOfRangeMode == 'discard':
-                            removedCount += 1
-                            continue
-                        elif settings.xAxisOutOfRangeMode == 'clamp':
-                            result[0] = max(settings.xAxisMin, min(settings.xAxisMax, result[0]))
+        with open(os.path.join(results_directory, jsonFile)) as inFile:
+            print('Loading file: {}'.format(jsonFile))
+            jsonContents = json.load(inFile)
+            settings = getProcessingSettings(mode, jsonContents)
+            print('Creating chart for method ' + settings.methodName + "..")
 
-                    if settings.reverse:
-                        result[0] = (settings.xAxisMax + settings.xAxisMin) - result[0]
-                    
-                    binIndexX = int((result[0] - settings.xAxisMin) / deltaX)
-                    histogram[binIndexX].append(result[1])
-                
-                xValues = [((float(x + 1) * deltaX) + settings.xAxisMin) for x in range(settings.binCount)]
-                # Taking the mean over each bin
-                dataToPlot = {
-                    'xAxis': xValues,
-                    'yAxis': []
-                }
-                for bin in histogram:
-                    binMean = np.mean(bin)
-                    dataToPlot['yAxis'].append(binMean)
-                
-                yAxisMin, yAxisMax = np.min(dataToPlot["yAxis"]), np.max(dataToPlot["yAxis"])
-                yTick = (yAxisMax - yAxisMin) / 5
-                    
-                chart = go.Figure()
-                chart.add_trace(go.Scatter(x=dataToPlot['xAxis'], y=dataToPlot["yAxis"], mode="lines"))# , mode="lines" stackgroup="main"
-    
-                xAxisTitle = settings.xAxisTitle
-                chart.update_coloraxes(showscale=False)
-                pio.defaults.default_width = 300
-                pio.defaults.default_height = 300
-                if settings.xAxisTitleAdjustment > 0:
-                    xAxisTitle += ' ' * settings.xAxisTitleAdjustment
-                    xAxisTitle += 't'
-                
-                chart.update_layout(xaxis_title=xAxisTitle, yaxis_title="Execution Time",
-                                        margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
-                                        xaxis=dict(autorange=False, automargin=True, dtick=settings.xTick, range=[settings.xAxisMin, settings.xAxisMax]),
-                                        yaxis=dict(autorange=False, automargin=True, dtick=yTick, range=[yAxisMin, yAxisMax]))
-                #stackFigure.show()
+            deltaX = (settings.xAxisMax - settings.xAxisMin) / settings.binCount
 
-                outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
-                pio.write_image(chart, outputFile, format='pdf', validate=True)
-                
-                
-                
-                
-                
-                
-                
+            results = []
+
+            for result in jsonContents["results"]:
+                results.append([settings.readVauleX(result), jsonContents["results"]["executionTimeInMS"]])
+
+            histogram = []
+            for _ in range(settings.binCount):
+                histogram.append([])
+
+            for result in results:
+                if result[0] is None:
+                    result[0] = 0
+                if result[0] < settings.xAxisMin or result[0] > settings.xAxisMax:
+                    if settings.xAxisOutOfRangeMode == 'discard':
+                        removedCount += 1
+                        continue
+                    elif settings.xAxisOutOfRangeMode == 'clamp':
+                        result[0] = max(settings.xAxisMin, min(settings.xAxisMax, result[0]))
+
+                if settings.reverse:
+                    result[0] = (settings.xAxisMax + settings.xAxisMin) - result[0]
+
+                binIndexX = int((result[0] - settings.xAxisMin) / deltaX)
+                histogram[binIndexX].append(result[1])
+
+            xValues = [((float(x + 1) * deltaX) + settings.xAxisMin) for x in range(settings.binCount)]
+            # Taking the mean over each bin
+            dataToPlot = {
+                'xAxis': xValues,
+                'yAxis': []
+            }
+            for bin in histogram:
+                binMean = np.mean(bin)
+                dataToPlot['yAxis'].append(binMean)
+
+            yAxisMin, yAxisMax = np.min(dataToPlot["yAxis"]), np.max(dataToPlot["yAxis"])
+            yTick = (yAxisMax - yAxisMin) / 5
+
+            chart = go.Figure()
+            chart.add_trace(go.Scatter(x=dataToPlot['xAxis'], y=dataToPlot["yAxis"], mode="lines"))# , mode="lines" stackgroup="main"
+
+            xAxisTitle = settings.xAxisTitle
+            chart.update_coloraxes(showscale=False)
+            pio.defaults.default_width = 300
+            pio.defaults.default_height = 300
+            if settings.xAxisTitleAdjustment > 0:
+                xAxisTitle += ' ' * settings.xAxisTitleAdjustment
+                xAxisTitle += 't'
+
+            chart.update_layout(xaxis_title=xAxisTitle, yaxis_title="Execution Time",
+                                    margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
+                                    xaxis=dict(autorange=False, automargin=True, dtick=settings.xTick, range=[settings.xAxisMin, settings.xAxisMax]),
+                                    yaxis=dict(autorange=False, automargin=True, dtick=yTick, range=[yAxisMin, yAxisMax]))
+            #stackFigure.show()
+
+            outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
+            pio.write_image(chart, outputFile, format='pdf', validate=True)
+
+
+
+
+
+
+
                 
                 
                 
@@ -1234,6 +1233,8 @@ def main():
             continue
         elif directoryToProcess == 'support_radius_estimation':
             createChart(args.results_directory, args.output_dir, 'support-radius')
+        elif directoryToProcess == 'execution_times':
+            executionTimeChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'execution-times')
         elif not os.path.isdir(os.path.join(args.results_directory, directoryToProcess)):
             continue
         else:
