@@ -18,26 +18,32 @@ struct DummyMethod {
 };
 
 int main(int argc, char** argv) {
+    if(argc == 1) {
+        throw std::runtime_error("Usage: executiontimevariation [statue or sphere]");
+    }
+    std::string mode = argv[1];
+    if(mode != "statue" && mode != "sphere") {
+        throw std::runtime_error("Usage: executiontimevariation [statue or sphere]");
+    }
+
+    bool isSphereMode = mode == "sphere";
+
     const uint32_t randomSeed = 27062025;
     const uint32_t experimentCount = 100000;
     const uint32_t iterationCount = 25;
     const uint32_t pointCloudPointCount = 5000000;
-    std::filesystem::path outputFile = "time_variation_sphere.csv";
 
-    //std::string fileToLoad = "/home/bart/Documents/2025/SHREC2025/20320c2290554cfca7655d03af495da4.cm";
-    std::string fileToLoad = "../input/sphere.obj";
-    if(argc > 1) {
-        fileToLoad = std::string(argv[1]);
-    }
+    std::filesystem::path outputDirectory = "../output_paper/figure_5_execution_time_variation";
+    std::filesystem::create_directories(outputDirectory);
+    std::filesystem::path outputFile = outputDirectory / (isSphereMode ? "time_variation_sphere.csv" : "time_variation_statue.csv");
+    std::string fileToLoad = isSphereMode ? "../input/sphere.obj" : "../input/20320c2290554cfca7655d03af495da4.cm";
 
     ShapeDescriptor::cpu::Mesh mesh = ShapeDescriptor::loadMesh(fileToLoad);
 
     // Taken from the dataset.json file. Skips having to partially start up the entire benchmark
     ShapeBench::DatasetEntry entry;
-    //entry.computedObjectCentre = {-1.7085775569560964, -0.8829449695181175, 17.96578024203662};
-    //entry.computedObjectRadius = 18.2042543418707;
-    entry.computedObjectCentre = {0, 0, 0};
-    entry.computedObjectRadius = 1;
+    entry.computedObjectCentre = isSphereMode ? {0, 0, 0} : {-1.7085775569560964, -0.8829449695181175, 17.96578024203662};
+    entry.computedObjectRadius = isSphereMode ? 1 : 18.2042543418707;
 
     ShapeBench::moveAndScaleMesh(mesh, entry);
 
