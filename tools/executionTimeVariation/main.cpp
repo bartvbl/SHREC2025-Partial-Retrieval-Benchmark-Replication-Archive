@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
     // Taken from the dataset.json file. Skips having to partially start up the entire benchmark
     ShapeBench::DatasetEntry entry;
-    entry.computedObjectCentre = isSphereMode ? {0, 0, 0} : {-1.7085775569560964, -0.8829449695181175, 17.96578024203662};
+    entry.computedObjectCentre = isSphereMode ? std::array<double,3>{0, 0, 0} : std::array<double,3>{-1.7085775569560964, -0.8829449695181175, 17.96578024203662};
     entry.computedObjectRadius = isSphereMode ? 1 : 18.2042543418707;
 
     ShapeBench::moveAndScaleMesh(mesh, entry);
