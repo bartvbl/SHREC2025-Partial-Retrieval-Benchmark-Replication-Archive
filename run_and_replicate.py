@@ -284,31 +284,6 @@ trackExperiments = [
     ('experiment9-level3-ultimate-test',                 'Experiment 9: Occlusion, two clutter objects, fixed level gaussian noise, and vertex perturbation')
 ]
 
-def editSupportRadiusExtent(config):
-    download_menu = TerminalMenu([
-        "Recompute the support radius from scratch",
-        "Replicate the statistics computed for one specific support radius",
-        'back'],
-        title='------------------ Support Radius Replication ------------------')
-
-    choice = download_menu.show() + 1
-
-    if choice == 1:
-        config['replicationOverrides']['supportRadius']['recomputeEntirely'] = True
-        config['replicationOverrides']['supportRadius']['recomputeSingleRadius'] = False
-    if choice == 2:
-        config['replicationOverrides']['supportRadius']['recomputeEntirely'] = False
-        config['replicationOverrides']['supportRadius']['recomputeSingleRadius'] = True
-        radiusSteps = config['parameterSelection']['supportRadius']['numberOfSupportRadiiToTry']
-        radiusMinValue = config['parameterSelection']['supportRadius']['radiusSearchStart']
-        radiusStepValue = config['parameterSelection']['supportRadius']['radiusSearchStep']
-        print('The minimum, maximum, and average descriptor distances will be computed for a total of ' + str(radiusSteps) + ' radii.')
-        print('These vary between {} and {}, in steps of {}.'.format(radiusMinValue, radiusMinValue + float(radiusSteps) * radiusStepValue, radiusStepValue))
-        selectedRadius = input('Enter the index of the radius that should be replicated (integer between 0 and {}): '.format(radiusSteps))
-        config['replicationOverrides']['supportRadius']['radiusIndexToRecompute'] = int(selectedRadius)
-    print()
-    return config
-
 def runCharter():
     os.makedirs('output/charts', exist_ok=True)
     run_command_line_command('python3 tools/charter/charter.py --output-dir=output/charts --results-directory=precomputed_results')
@@ -395,7 +370,22 @@ def showExecutionTimesNotice():
     notice_menu.show()
 
 
-def runBenchmarkInExecutionTimeMode(config_file_to_edit):
+def runBenchmarkInExecutionTimeMode(config_file_to_edit, generateSampleMeshes = False):
+    config = readConfigFile(config_file_to_edit)
+    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = True
+    config["executionTimeMeasurement"]["enabled"] = generateSampleMeshes
+    writeConfigFile(config, config_file_to_edit)
+
+    if generateSampleMeshes:
+        print()
+        print("Generating sample synthetic execution time meshes..")
+        destinationDirectory = config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"][
+            "generateSampleMeshes"]
+        absoluteDestinationDirectory = os.path.abspath(os.path.join('bin', destinationDirectory))
+        os.makedirs(absoluteDestinationDirectory, exist_ok=True)
+        print("You can find the generated meshes here:", absoluteDestinationDirectory)
+        print()
+
     config = readConfigFile(config_file_to_edit)
     enableVisualisations = config['filterSettings']['additiveNoise']['enableDebugCamera']
     commandPreamble = 'xvfb-run ' if not enableVisualisations else ''
@@ -404,37 +394,38 @@ def runBenchmarkInExecutionTimeMode(config_file_to_edit):
     print()
     print('Complete.')
 
+    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = False
+    config["executionTimeMeasurement"]["enabled"] = False
+    writeConfigFile(config, config_file_to_edit)
+
 def replicateExecutionTimes(config_file_to_edit):
     showExecutionTimesNotice()
+    runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
 
 
 def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
     showExecutionTimesNotice()
 
 def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
-    config = readConfigFile(config_file_to_edit)
-    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = True
-    config["executionTimeMeasurement"]["enabled"] = True
-    writeConfigFile(config, config_file_to_edit)
+    runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
 
-    print()
-    print("Generating sample synthetic execution time meshes..")
-    destinationDirectory = config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"]
-    absoluteDestinationDirectory = os.path.abspath(os.path.join('bin', destinationDirectory))
-    os.makedirs(absoluteDestinationDirectory, exist_ok=True)
-    print("You can find the generated meshes here:", absoluteDestinationDirectory)
-    print()
 
-    runBenchmarkInExecutionTimeMode(config_file_to_edit)
-
-    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = False
-    config["executionTimeMeasurement"]["enabled"] = False
-    writeConfigFile(config, config_file_to_edit)
 
 
 
 def replicateMICIDensityThreshold(config_file_to_edit):
     run_command_line_command('./miccithresholdselector --configuration-file=../{}'.format(config_file_to_edit), 'bin')
+
+    config = readConfigFile(config_file_to_edit)
+
+    print()
+    print('Complete.')
+    print('The above threshold should be equal to the one from the config file:', config["methodSettings"]["MICCI-PointCloud"]["levelThreshold"])
+    print("Note: this value differs from the one reported in the paper,")
+    print("because the threshold is scaled as a function of the support radius.")
+    print("The one in the paper is based on a support radius of 0.5,")
+    print("while this one was computed for a radius of", config["methodSettings"]["MICCI-PointCloud"]["forSupportRadius"])
+    print()
 
 
 def runReplication(config_file_to_edit):
