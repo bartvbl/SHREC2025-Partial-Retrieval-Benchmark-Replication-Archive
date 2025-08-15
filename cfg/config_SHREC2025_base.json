@@ -304,8 +304,8 @@
             "repetitionCount": 30,
             "sphereInstanceLayerCount": 25,
             "sphereInstanceSliceCount": 25,
-            "generatedMeshDirectory": "generated_scenes",
-            "generateSampleMeshes": true,
+            "generatedMeshDirectory": "../output_paper/synthetic_execution_time_meshes",
+            "generateSampleMeshes": false,
             "pointCloudDensityScaleFactor": 0.01
         },
         "syntheticExperiments": [

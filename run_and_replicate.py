@@ -385,22 +385,51 @@ def replicateExperimentsFigures(config_file_to_edit):
         if choice == len(trackExperiments) + 3:  #
             return
 
-
-def replicateExecutionTimes(config_file_to_edit):
+def showExecutionTimesNotice():
     notice_menu = TerminalMenu(["Continue"],
-                                    title="-------------------------"
-                                "\nNote:"
-                                "\nYou are now about to run experiments measuring execution time."
-                                "\nTo get meaningful data, please enter your BIOS, and disable CPU frequency boosting")
+                               title="-------------------------"
+                                     "\nNote:"
+                                     "\nYou are now about to run experiments measuring execution time."
+                                     "\nTo get meaningful data, please enter your BIOS, and disable CPU frequency boosting."
+                                     "\nYou will otherwise see a lot of variability in measured execution times.")
     notice_menu.show()
 
 
-def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
-    pass
+def runBenchmarkInExecutionTimeMode(config_file_to_edit):
+    config = readConfigFile(config_file_to_edit)
+    enableVisualisations = config['filterSettings']['additiveNoise']['enableDebugCamera']
+    commandPreamble = 'xvfb-run ' if not enableVisualisations else ''
+    commandToRun = 'taskset --cpu-list 3 ' + commandPreamble + './shapebench --configuration-file=../{}'.format(config_file_to_edit)
+    run_command_line_command(commandToRun, 'bin')
+    print()
+    print('Complete.')
 
+def replicateExecutionTimes(config_file_to_edit):
+    showExecutionTimesNotice()
+
+
+def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
+    showExecutionTimesNotice()
 
 def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
-    pass
+    config = readConfigFile(config_file_to_edit)
+    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = True
+    config["executionTimeMeasurement"]["enabled"] = True
+    writeConfigFile(config, config_file_to_edit)
+
+    print()
+    print("Generating sample synthetic execution time meshes..")
+    destinationDirectory = config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"]
+    absoluteDestinationDirectory = os.path.abspath(os.path.join('bin', destinationDirectory))
+    os.makedirs(absoluteDestinationDirectory, exist_ok=True)
+    print("You can find the generated meshes here:", absoluteDestinationDirectory)
+    print()
+
+    runBenchmarkInExecutionTimeMode(config_file_to_edit)
+
+    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = False
+    config["executionTimeMeasurement"]["enabled"] = False
+    writeConfigFile(config, config_file_to_edit)
 
 
 
