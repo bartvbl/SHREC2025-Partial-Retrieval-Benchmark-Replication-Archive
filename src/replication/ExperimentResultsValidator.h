@@ -70,8 +70,8 @@ namespace ShapeBench {
         std::filesystem::path reportFilePath = reportsDirectory / (methodName + "-" + experimentName + "-" + ShapeDescriptor::generateUniqueFilenameString() + ".csv");
         std::ofstream reportFile(reportFilePath);
 
-        reportFile << "Result ID, Clutter,,, Occlusion,,, DDI,,, Model ID,,, PRC: distance to nearest neighbour,,, PRC: distance to second nearest neighbour" << std::endl;
-        reportFile << ", author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?" << std::endl;
+        reportFile << "Result ID, Clutter (model),,, Occlusion (model),,, Clutter (scene),,, Occlusion (scene),,, DDI,,, Model ID,,, PRC: distance to nearest neighbour,,, PRC: distance to second nearest neighbour" << std::endl;
+        reportFile << ", author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?, author, replicated, identical?" << std::endl;
 
         uint32_t missingCount = 0;
         for(uint32_t vertexIndex = 0; vertexIndex < replicatedResults.vertexResults.size(); vertexIndex++) {
@@ -88,45 +88,87 @@ namespace ShapeBench {
             uint32_t mappedIndex = resultIndexConversionMap.at(vertexIndex);
             const nlohmann::json& originalResult = previouslyComputedResults.at(mappedIndex);
 
-
+            bool modelHasFilterOutput = !originalResult["modelObject"]["filterOutput"].is_null();
+            bool sceneHasFilterOutput = !originalResult["sceneObject"]["filterOutput"].is_null();
 
             // Detecting properties that any filters might have added
             uint32_t propertyIndex = 0;
-            auto originalResultFilterOutputIterator = originalResult["modelObject"]["filterOutput"].begin();
-            for(const auto& [key, value] : replicatedResult.modelObject.filterOutput.items()) {
-                if(!value.is_number()) {
-                    continue;
+
+            if(modelHasFilterOutput) {
+                auto originalResultFilterOutputIterator = originalResult["modelObject"]["filterOutput"].begin();
+                for(const auto& [key, value] : replicatedResult.modelObject.filterOutput.items()) {
+                    if (!value.is_number()) {
+                        continue;
+                    }
+                    if (validatedResultCount == 0) {
+                        filterProperties.emplace_back();
+                        filterPropertyNames.push_back("Filter Specific Property (model) \"" + key + "\"");
+                    }
+                    double referenceValue = 0.0;
+                    if (!originalResultFilterOutputIterator->is_null()) {
+                        referenceValue = originalResultFilterOutputIterator.value();
+                    }
+                    double computedValue = 0.0;
+                    if(!value.is_null()) {
+                        computedValue = double(value);
+                    }
+                    filterProperties.at(propertyIndex).registerValue(computedValue, referenceValue);
+                    propertyIndex++;
+                    originalResultFilterOutputIterator++;
                 }
-                if(validatedResultCount == 0) {
-                    filterProperties.emplace_back();
-                    filterPropertyNames.push_back("Filter Specific Property (model) \"" + key + "\"");
-                }
-                filterProperties.at(propertyIndex).registerValue(value, originalResultFilterOutputIterator.value());
-                propertyIndex++;
-                originalResultFilterOutputIterator++;
             }
 
-            originalResultFilterOutputIterator = originalResult["sceneObject"]["filterOutput"].begin();
-            for(const auto& [key, value] : replicatedResult.sceneObject.filterOutput.items()) {
-                if(!value.is_number()) {
-                    continue;
+            if(sceneHasFilterOutput) {
+                auto originalResultFilterOutputIterator = originalResult["sceneObject"]["filterOutput"].begin();
+                for(const auto& [key, value] : replicatedResult.sceneObject.filterOutput.items()) {
+                    if (!value.is_number()) {
+                        continue;
+                    }
+                    if (validatedResultCount == 0) {
+                        filterProperties.emplace_back();
+                        filterPropertyNames.push_back("Filter Specific Property (scene) \"" + key + "\"");
+                    }
+                    double referenceValue = 0.0;
+                    if (!originalResultFilterOutputIterator->is_null()) {
+                        referenceValue = originalResultFilterOutputIterator.value();
+                    }
+                    double computedValue = 0.0;
+                    if(!value.is_null()) {
+                        computedValue = double(value);
+                    }
+                    filterProperties.at(propertyIndex).registerValue(computedValue, referenceValue);
+                    propertyIndex++;
+                    originalResultFilterOutputIterator++;
                 }
-                if(validatedResultCount == 0) {
-                    filterProperties.emplace_back();
-                    filterPropertyNames.push_back("Filter Specific Property (scene) \"" + key + "\"");
-                }
-                filterProperties.at(propertyIndex).registerValue(value, originalResultFilterOutputIterator.value());
-                propertyIndex++;
-                originalResultFilterOutputIterator++;
             }
 
             validatedResultCount++;
-
             reportFile << vertexIndex << ", ";
-            clutterStats.registerValue(originalResult["sceneObject"]["fractionAddedNoise"], replicatedResult.sceneObject.fractionAddedNoise);
-            reportFile << originalResult["sceneObject"]["fractionAddedNoise"] << ", " << replicatedResult.sceneObject.fractionAddedNoise << ", " << (originalResult["sceneObject"]["fractionAddedNoise"] == replicatedResult.sceneObject.fractionAddedNoise ? "yes" : "no") << ", ";
-            occlusionStats.registerValue(originalResult["sceneObject"]["fractionSurfacePartiality"], replicatedResult.sceneObject.fractionSurfacePartiality);
-            reportFile << originalResult["sceneObject"]["fractionSurfacePartiality"] << ", " << replicatedResult.sceneObject.fractionSurfacePartiality << ", " << (originalResult["sceneObject"]["fractionSurfacePartiality"] == replicatedResult.sceneObject.fractionSurfacePartiality ? "yes" : "no") << ", ";
+
+            // Model
+            if(modelHasFilterOutput) {
+                double addedNoise = !originalResult["modelObject"]["fractionAddedNoise"].is_null() ? double(originalResult["modelObject"]["fractionAddedNoise"]) : 0;
+                double partiality = !originalResult["modelObject"]["fractionSurfacePartiality"].is_null() ? double(originalResult["modelObject"]["fractionSurfacePartiality"]) : 0;
+                clutterStats.registerValue(addedNoise, replicatedResult.modelObject.fractionAddedNoise);
+                reportFile << addedNoise << ", " << replicatedResult.modelObject.fractionAddedNoise << ", " << (addedNoise == replicatedResult.modelObject.fractionAddedNoise ? "yes" : "no") << ", ";
+                occlusionStats.registerValue(partiality, replicatedResult.modelObject.fractionSurfacePartiality);
+                reportFile << partiality << ", " << replicatedResult.modelObject.fractionSurfacePartiality << ", " << (partiality == replicatedResult.modelObject.fractionSurfacePartiality ? "yes" : "no") << ", ";
+            } else {
+                reportFile << ",,,";
+            }
+
+            // Scene
+            if(sceneHasFilterOutput) {
+                double addedNoise = !originalResult["sceneObject"]["fractionAddedNoise"].is_null() ? double(originalResult["sceneObject"]["fractionAddedNoise"]) : 0;
+                double partiality = !originalResult["sceneObject"]["fractionSurfacePartiality"].is_null() ? double(originalResult["sceneObject"]["fractionSurfacePartiality"]) : 0;
+                clutterStats.registerValue(addedNoise, replicatedResult.sceneObject.fractionAddedNoise);
+                reportFile << addedNoise << ", " << replicatedResult.sceneObject.fractionAddedNoise << ", " << (addedNoise == replicatedResult.sceneObject.fractionAddedNoise ? "yes" : "no") << ", ";
+                occlusionStats.registerValue(partiality, replicatedResult.sceneObject.fractionSurfacePartiality);
+                reportFile << partiality << ", " << replicatedResult.sceneObject.fractionSurfacePartiality << ", " << (partiality == replicatedResult.sceneObject.fractionSurfacePartiality ? "yes" : "no") << ", ";
+            } else {
+                reportFile << ",,,";
+            }
+            // Matching result
             descriptorRankStats.registerValue(originalResult["filteredDescriptorRank"], replicatedResult.filteredDescriptorRank);
             reportFile << originalResult["filteredDescriptorRank"] << ", " << replicatedResult.filteredDescriptorRank << ", " << (originalResult["filteredDescriptorRank"] == replicatedResult.filteredDescriptorRank ? "yes" : "no") << ", ";
             meshIDCorrectStats.registerValue(originalResult["meshID"] == replicatedResult.sourceVertex.meshID ? 0 : 1);
