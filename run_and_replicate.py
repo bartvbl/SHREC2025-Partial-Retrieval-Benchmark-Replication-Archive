@@ -306,7 +306,7 @@ def runCharter():
     os.makedirs('output_paper/charts', exist_ok=True)
     run_command_line_command('python3 tools/charter/charter.py --output-dir=output_paper/charts --results-directory=precomputed_results')
     print()
-    print('Charts created. You can find them in the output/charts directory.')
+    print('Charts created. You can find them in the output_paper/charts directory.')
     print()
 
 def replicateExperimentResults(figureIndex, config_file_to_edit):
@@ -399,7 +399,7 @@ def runBenchmarkInExecutionTimeMode(config_file_to_edit, generateSampleMeshes = 
         print()
         print("Generating sample synthetic execution time meshes..")
         destinationDirectory = config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"][
-            "generateSampleMeshes"]
+            "generatedMeshDirectory"]
         absoluteDestinationDirectory = os.path.abspath(os.path.join('bin', destinationDirectory))
         os.makedirs(absoluteDestinationDirectory, exist_ok=True)
         print("You can find the generated meshes here:", absoluteDestinationDirectory)
@@ -418,8 +418,7 @@ def runBenchmarkInExecutionTimeMode(config_file_to_edit, generateSampleMeshes = 
     writeConfigFile(config, config_file_to_edit)
 
 def replicateExecutionTimes(config_file_to_edit):
-    showExecutionTimesNotice()
-    runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
+    runBenchmarkInExecutionTimeMode(config_file_to_edit, False)
 
 
 def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
@@ -461,7 +460,17 @@ def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
 
 
 def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
+    showExecutionTimesNotice()
+
+    config = readConfigFile(config_file_to_edit)
+    config["methodSettings"]["SI"]["enabled"] = True
+    writeConfigFile(config, config_file_to_edit)
+
     runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
+
+    config = readConfigFile(config_file_to_edit)
+    config["methodSettings"]["SI"]["enabled"] = False
+    writeConfigFile(config, config_file_to_edit)
 
 
 
