@@ -669,9 +669,9 @@ double ShapeBench::computeAreaOfIntersection(ShapeBench::Cylinder cylinder, Shap
     // Check for valid (nonzero area) triangle. If triangle has 0 area, intersection area is also 0
     // We're dealing with relative coordinates here to triangleVertex0, so we can check these directly
     // Note: this works because we have moved one of the vertices to the origin
-    assert(triangleVertex0 != triangleVertex1);
-    assert(triangleVertex1 != triangleVertex2);
-    assert(triangleVertex2 != triangleVertex0);
+    if(triangleVertex0 == triangleVertex1 || triangleVertex1 == triangleVertex2 || triangleVertex2 == triangleVertex0) {
+        return 0;
+    }
 
     // Any valid triangle should have a valid normal vector
     dvec3 triangleNormal = glm::triangleNormal(triangleVertex0, triangleVertex1, triangleVertex2);
