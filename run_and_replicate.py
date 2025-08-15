@@ -387,7 +387,12 @@ def replicateExperimentsFigures(config_file_to_edit):
 
 
 def replicateExecutionTimes(config_file_to_edit):
-    pass
+    notice_menu = TerminalMenu(["Continue"],
+                                    title="-------------------------"
+                                "\nNote:"
+                                "\nYou are now about to run experiments measuring execution time."
+                                "\nTo get meaningful data, please enter your BIOS, and disable CPU frequency boosting")
+    notice_menu.show()
 
 
 def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
