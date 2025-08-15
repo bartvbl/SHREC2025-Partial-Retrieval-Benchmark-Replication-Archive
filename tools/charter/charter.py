@@ -596,8 +596,8 @@ def generateSupportRadiusChart(results_directory, output_directory):
             else:
                 countsFigure.update_layout(showlegend=False)
 
-            pio.kaleido.scope.default_width = chartWidth
-            pio.kaleido.scope.default_height = 300
+            pio.defaults.default_width = chartWidth
+            pio.defaults.default_height = 300
 
             countsFigure.add_trace(go.Scatter(x=xValues, y=yValues_Sequence1, mode='lines', name="Min"))
             countsFigure.add_trace(go.Scatter(x=xValues, y=yValues_Sequence2, mode='lines', name="Mean"))
@@ -610,7 +610,7 @@ def generateSupportRadiusChart(results_directory, output_directory):
 
             outputFile = os.path.join(output_directory, "support-radius-" + methodName + ".pdf")
 
-            pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
+            pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
     print('Done.')
 
 
@@ -679,14 +679,14 @@ def create2DChart(rawResults, configuration, settings, output_directory, jsonFil
     if jsonFilePath is not jsonFilePaths[-1]:
         stackFigure.update_coloraxes(showscale=False)
         stackFigure.update_traces(showscale=False)
-        pio.kaleido.scope.default_width = 300
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 300
+        pio.defaults.default_height = 300
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
             xAxisTitle += 't'
     else:
-        pio.kaleido.scope.default_width = 368
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 368
+        pio.defaults.default_height = 300
 
     stackFigure.update_layout(xaxis_title=xAxisTitle, yaxis_title=settings.yAxisTitle,
                               margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
@@ -695,7 +695,7 @@ def create2DChart(rawResults, configuration, settings, output_directory, jsonFil
     #stackFigure.show()
 
     outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
-    pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+    pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
 
 
 
@@ -795,11 +795,11 @@ def createChart(results_directory, output_directory, mode):
                     xAxisTitle += 't'
                 stackFigure.update_layout(showlegend=False)
                 titleX = 0.5
-                pio.kaleido.scope.default_width = 300
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 300
+                pio.defaults.default_height = 300
             else:
-                pio.kaleido.scope.default_width = 475
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 475
+                pio.defaults.default_height = 300
                 titleX = (float(200) / float(500)) * 0.5
 
             stackFigure.update_yaxes(range=[0, 1])
@@ -815,7 +815,7 @@ def createChart(results_directory, output_directory, mode):
                     outputFileIndex += 1
                     outputFile = os.path.join(output_directory,
                                               settings.experimentName + "-" + settings.methodName + '-' + str(outputFileIndex) + ".pdf")
-            pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+            pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
             
             # single DDI Chart
             DDIChart = go.Figure()
@@ -829,11 +829,11 @@ def createChart(results_directory, output_directory, mode):
                     xAxisTitle += 't'
                 DDIChart.update_layout(showlegend=False)
                 titleX = 0.5
-                pio.kaleido.scope.default_width = 300
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 300
+                pio.defaults.default_height = 300
             else:
-                pio.kaleido.scope.default_width = 475
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 475
+                pio.defaults.default_height = 300
                 titleX = (float(200) / float(500)) * 0.5
             
             DDIChart.update_yaxes(range=[0, 1])
@@ -854,7 +854,7 @@ def createChart(results_directory, output_directory, mode):
                     outputFileIndex += 1
                     outputFile = os.path.join(output_directory,
                                               settings.experimentName + "-" + settings.methodName + '-' + str(outputFileIndex) + ".pdf")
-            pio.write_image(DDIChart, outputFile, engine="kaleido", validate=True)
+            pio.write_image(DDIChart, outputFile, format='pdf', validate=True)
 
     if not settings.enable2D and not settings.enable3D:
         print('Writing counts chart..')
@@ -875,9 +875,9 @@ def createChart(results_directory, output_directory, mode):
         #countsFigure.update_layout(
         #    legend=dict(y=0, orientation="h", yanchor="bottom", yref="container", xref="paper", xanchor="left"))
         outputFile = os.path.join(output_directory, lastSettings.experimentName + "-counts.pdf")
-        pio.kaleido.scope.default_width = 435
-        pio.kaleido.scope.default_height = 300
-        pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
+        pio.defaults.default_width = 435
+        pio.defaults.default_height = 300
+        pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
         return (chartAreas, settings.chartShortName)
 
     print('Done.')
@@ -902,9 +902,9 @@ def writeOverviewChart(contents, outputFile):
                               categoryarray=['Clutter', 'Occlusion', 'Alternate<br>triangulation', 'Deviating<br>normal vector', 'Deviating<br>support radius', 'Gaussian<br>noise', 'Alternate<br>mesh resolution'])
     countsFigure.update_yaxes(range=[0, 1], dtick=0.1)
     countsFigure.update_layout(margin={'t': 0, 'l': 0, 'b': 0, 'r': 0}, font=dict(size=18), yaxis_title='Normalised DDI AUC')
-    pio.kaleido.scope.default_width = 1400
-    pio.kaleido.scope.default_height = 300
-    pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
+    pio.defaults.default_width = 1400
+    pio.defaults.default_height = 300
+    pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
 
 #DDI Charts for multiple filters and not 
 
@@ -976,14 +976,14 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     if jsonFilePath is not jsonFilePaths[-1]:
         stackFigure.update_coloraxes(showscale=False)
         stackFigure.update_traces(showlegend=False)
-        pio.kaleido.scope.default_width = 300
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 300
+        pio.defaults.default_height = 300
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
             xAxisTitle += 't'
     else:
-        pio.kaleido.scope.default_width = 500
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 500
+        pio.defaults.default_height = 300
     
     if settings.xAxisTitleAdjustment > 0:
         xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1000,7 +1000,7 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     stackFigure.update_xaxes(range=settings.xAxisBounds)
 
     outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + "-2DChart.pdf")
-    pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+    pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
 
 def createDDI3DChart(rawResults, settings, output_directory):
     #initialize histogram 
@@ -1091,14 +1091,14 @@ def createDDI3DChart(rawResults, settings, output_directory):
         if chart is not histogramsAccepted[-1]:
             stackFigure.update_coloraxes(showscale=False)
             stackFigure.update_traces(showlegend=False)
-            pio.kaleido.scope.default_width = 500
-            pio.kaleido.scope.default_height = 300
+            pio.defaults.default_width = 500
+            pio.defaults.default_height = 300
             if settings.xAxisTitleAdjustment > 0:
                 xAxisTitle += ' ' * settings.xAxisTitleAdjustment
                 xAxisTitle += 't'
         else:
-            pio.kaleido.scope.default_width = 500
-            pio.kaleido.scope.default_height = 300
+            pio.defaults.default_width = 500
+            pio.defaults.default_height = 300
         
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1118,7 +1118,7 @@ def createDDI3DChart(rawResults, settings, output_directory):
         stackFigure.update_yaxes(range=[0, 1])
 
         outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + "-3D" + str(cIndex) + "-Chart.pdf")
-        pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+        pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
 
 #   NOTE: Integrate this function inside the createChart one
 def executionTimeChart(results_directory, output_directory, mode):
@@ -1185,8 +1185,8 @@ def executionTimeChart(results_directory, output_directory, mode):
     
                 xAxisTitle = settings.xAxisTitle
                 chart.update_coloraxes(showscale=False)
-                pio.kaleido.scope.default_width = 300
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 300
+                pio.defaults.default_height = 300
                 if settings.xAxisTitleAdjustment > 0:
                     xAxisTitle += ' ' * settings.xAxisTitleAdjustment
                     xAxisTitle += 't'
@@ -1198,7 +1198,7 @@ def executionTimeChart(results_directory, output_directory, mode):
                 #stackFigure.show()
 
                 outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
-                pio.write_image(chart, outputFile, engine="kaleido", validate=True)
+                pio.write_image(chart, outputFile, format='pdf', validate=True)
                 
                 
                 
