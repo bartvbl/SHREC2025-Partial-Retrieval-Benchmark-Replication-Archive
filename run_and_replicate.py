@@ -384,6 +384,7 @@ def showExecutionTimesNotice():
                                      "\nNote:"
                                      "\nYou are now about to run experiments measuring execution time."
                                      "\nTo get meaningful data, please enter your BIOS, and disable CPU frequency boosting."
+                                     "\nRestart this script after you have done so."
                                      "\nYou will otherwise see a lot of variability in measured execution times.")
     notice_menu.show()
 
@@ -423,6 +424,41 @@ def replicateExecutionTimes(config_file_to_edit):
 
 def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
     showExecutionTimesNotice()
+
+    variantMenu = TerminalMenu(["Subfigure 5a: Sphere", "Subfigure 5b: Statue", "back"],
+                               title="------------------ Replicate Figure 5 ------------------")
+    while True:
+        choice = variantMenu.show() + 1
+        if choice != 3:
+            print()
+            print('Note: this tool will run for quite a while, and produces execution times that are not comparable directly.')
+            print('By default, it will do 100000 iterations, which each take several seconds.')
+            print('The trend this chart is trying to show should already start to appear earlier though.')
+            count = int(input('How many samples do you want to compute a chart for? '))
+            print()
+            variant = 'sphere'
+            if choice == 2:
+                variant = 'statue'
+
+            run_command_line_command("./executiontimevariation {} {}".format(variant, count), "bin")
+
+            output_file = 'output_paper/figure_5_execution_time_variation/time_variation_{}.csv'.format(variant)
+            chart_file = 'output_paper/figure_5_execution_time_variation/chart_time_variation_{}.pdf'.format(variant)
+
+            print()
+            print('Data computed.')
+            print('The replicated data was written to: {}'.format(output_file))
+            print('You can find the version computed by the Authors at: precomputed_results/figure-5-exeuction-time-variation/time_variation_{}.csv'.format(variant))
+            print()
+            print('Computing chart based on the produced measurements..')
+            run_command_line_command('python3 scripts/plot_time_variation_heatmap.py {} {}'.format(output_file, chart_file), '.')
+            print('Done.')
+            print()
+            print('The chart was written to: {}'.format(chart_file))
+            print()
+        elif choice == 3:
+            return
+
 
 def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
     runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
