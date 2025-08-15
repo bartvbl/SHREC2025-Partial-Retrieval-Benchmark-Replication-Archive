@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     bool isSphereMode = mode == "sphere";
 
     const uint32_t randomSeed = 27062025;
-    const uint32_t experimentCount = 100000;
+    const uint32_t experimentCount = argc > 1 ? std::stoi(std::string(argv[2])) : 100000;
     const uint32_t iterationCount = 25;
     const uint32_t pointCloudPointCount = 5000000;
 
@@ -58,6 +58,8 @@ int main(int argc, char** argv) {
     std::ofstream outputStream(outputFile);
     outputStream << "Vertex index, Chosen support radius, Time to render " << iterationCount << " descriptors (s)" << std::endl;
 
+    std::chrono::steady_clock::time_point _startTime = std::chrono::steady_clock::now();
+
     for(uint32_t experimentIndex = 0; experimentIndex < experimentCount; experimentIndex++) {
         uint32_t vertexIndex = indexDistribution(engine);
         ShapeDescriptor::OrientedPoint referencePoint = {mesh.vertices[vertexIndex], mesh.normals[vertexIndex]};
@@ -72,7 +74,8 @@ int main(int argc, char** argv) {
 
         std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
         uint64_t nanosecondsTaken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
-        fmt::println("Time taken: {}", supportRadius, double(nanosecondsTaken) / double(1000000000UL));
+        fmt::print("Measured time for sample: {} ({}/{})", double(nanosecondsTaken) / double(1000000000UL), experimentIndex+1, experimentCount);
+        ShapeBench::printETA(_startTime, experimentIndex+1, experimentCount);
         outputStream << fmt::format("{}, {}, {}\n", vertexIndex, supportRadius, double(nanosecondsTaken) / double(1000000000ULL)) << std::flush;
 
         ShapeDescriptor::free(descriptors);
