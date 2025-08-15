@@ -52,7 +52,6 @@ def downloadDatasetsMenu():
 
     while True:
         choice = download_menu.show() + 1
-        os.makedirs('input/download/', exist_ok=True)
 
         if choice == 1 or choice == 2:
             downloadFile('https://ntnu.box.com/shared/static/ql21r340osh00dqy4atbju2u13ojt4vz.7z',
@@ -64,8 +63,27 @@ def downloadDatasetsMenu():
             return
 
 def installDependencies():
-    run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev')
-    run_command_line_command('pip3 install numpy matplotlib plotly wcwidth kaleido')
+    dependencies_menu = TerminalMenu([
+        "Install APT dependencies",
+        "Install Chromium (if you don't have Chrome available. Mandated by Kaleido, which generates charts)",
+        "Install conda",
+        "Install pip dependencies",
+        "back"], title='------------------ Install Dependencies ------------------')
+
+    while True:
+        choice = dependencies_menu.show() + 1
+
+        if choice == 1:
+            run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev')
+        if choice == 2:
+            run_command_line_command('sudo apt install chromium')
+        if choice == 3:
+            run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
+            run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
+        if choice == 4:
+            run_command_line_command('pip3 install numpy matplotlib plotly wcwidth kaleido')
+        if choice == 5:
+            return
 
 def compileProject():
     os.makedirs('bin', exist_ok=True)
