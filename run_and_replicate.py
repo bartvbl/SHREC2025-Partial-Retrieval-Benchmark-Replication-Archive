@@ -303,8 +303,8 @@ trackExperiments = [
 ]
 
 def runCharter():
-    os.makedirs('output/charts', exist_ok=True)
-    run_command_line_command('python3 tools/charter/charter.py --output-dir=output/charts --results-directory=precomputed_results')
+    os.makedirs('output_paper/charts', exist_ok=True)
+    run_command_line_command('python3 tools/charter/charter.py --output-dir=output_paper/charts --results-directory=precomputed_results')
     print()
     print('Charts created. You can find them in the output/charts directory.')
     print()
