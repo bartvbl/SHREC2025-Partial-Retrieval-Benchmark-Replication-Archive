@@ -171,6 +171,7 @@ add_executable(miccithresholdselector tools/micciThresholdSelector/main.cu
                                       tools/micciThresholdSelector/densityThresholdEstimator.cpp)
 target_link_libraries(miccithresholdselector PUBLIC ShapeDescriptor shapebenchstatic)
 set_property(TARGET miccithresholdselector PROPERTY CUDA_ARCHITECTURES 52 60 61 70 75 80 90)
+target_compile_options(miccithresholdselector PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -Xcompiler=-fopenmp -diag-suppress 20012>)
 
 add_executable(executiontimevariation tools/executionTimeVariation/main.cpp)
 target_link_libraries(executiontimevariation PUBLIC ShapeDescriptor shapebenchstatic)
