@@ -4,11 +4,12 @@ import plotly.graph_objects as go
 import numpy as np
 from collections import defaultdict
 import plotly.io as pio
+import sys
 
-pio.kaleido.scope.mathjax = None
+pio.defaults.mathjax = None
 
-# Hardcoded CSV filename
-file_path = '../input/time_variation.csv'
+file_path = sys.argv[1]
+output_file = sys.argv[2] # '../output/execution_time_variation.pdf'
 
 # Read columns 2 and 3 using the built-in csv module
 bincount = 70
@@ -64,8 +65,8 @@ stackFigure = go.Figure(go.Heatmap(x=dataRangeX, y=dataRangeY, z=dataRangeZ,
 
 stackFigure.update_coloraxes(showscale=False)
 stackFigure.update_traces(showscale=True)
-pio.kaleido.scope.default_width = 370
-pio.kaleido.scope.default_height = 310
+pio.defaults.default_width = 370
+pio.defaults.default_height = 310
 
 
 
@@ -73,5 +74,5 @@ stackFigure.update_layout(xaxis_title=xAxisTitle, yaxis_title=yAxisTitle,
                           margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
                           xaxis=dict(autorange=False, automargin=True, dtick=xTick, range=xAxisBounds),
                           yaxis=dict(autorange=False, automargin=True, dtick=yTick, range=yAxisBounds))
-pio.write_image(stackFigure, '../output/execution_time_variation.pdf', engine="kaleido", validate=True)
+pio.write_image(stackFigure, output_file, format='pdf', validate=True)
 
