@@ -1,3 +1,4 @@
+from pathlib import Path
 import json
 import math
 import os
@@ -9,6 +10,7 @@ import plotly.graph_objects as go
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.io as pio
+from plotly.subplots import make_subplots
 
 pio.kaleido.scope.mathjax = None
 
@@ -18,8 +20,16 @@ class ExperimentSettings:
 
 # NOTE: Needs to add the "sceneObject" key where is needed
 def getProcessingSettings(mode, fileContents):
-    experimentID = fileContents["experiment"]["index"]
-    experimentName = fileContents["configuration"]["experimentsToRun"][experimentID]["name"]
+    try:
+        experimentID = fileContents["experiment"]["index"]
+    except:
+        experimentID = 'None'
+    
+    try:
+        experimentName = fileContents["configuration"]["experimentsToRun"][experimentID]["name"]
+    except:
+        print("Computing execution time chart...")
+        experimentName = 'synthetic'
     settings = ExperimentSettings()
     settings.keepPreviousChartFile = False
     settings.minSamplesPerBin = 25
@@ -28,10 +38,16 @@ def getProcessingSettings(mode, fileContents):
     settings.heatmapRankLimit = 0
     settings.xAxisOutOfRangeMode = 'discard'
     settings.experimentName = experimentName
-    settings.methodName = fileContents["method"]['name']
     settings.PRCEnabled = "enableComparisonToPRC" in fileContents["configuration"] and fileContents["configuration"]["enableComparisonToPRC"]
-    settings.PRCSupportRadius = fileContents["computedConfiguration"][settings.methodName]["supportRadius"]
-    settings.methodName = "Spin Image" if settings.methodName == "SI" else settings.methodName
+    try:
+        settings.PRCSupportRadius = fileContents["computedConfiguration"][settings.methodName]["supportRadius"]
+    except:
+        settings.PRCSupportRadius = False
+    try:
+        settings.methodName = fileContents["method"]['name']
+        settings.methodName = "Spin Image" if settings.methodName == "SI" else settings.methodName
+    except:
+        settings.methodName = 'tmp'
     settings.title = settings.methodName
     settings.enable3D = False
     sharedYAxisTitle = "Proportion of DDI"
@@ -211,30 +227,20 @@ def getProcessingSettings(mode, fileContents):
         settings.readValueZ = lambda x: x["modelObject"]["filterOutput"]["gaussian-noise-max-deviation"]
         settings.readValueW = lambda x: x["modelObject"]["filterOutput"]["normal-noise-deviationAngle"]
         return settings
-    elif experimentName == "executionTime-numberOfPoints":
-        settings.chartShortName = "?"
-        settings.xAxisTitle = "numberOfPoints" #Adjust
+    elif experimentName == "synthetic":
+        print('Correctly in synthetic...')
+        settings.chartShortName = "Execution Time Measurament"
+        settings.xAxisTitle = "Workload Size"
         settings.yAxisTitle = "Execution Time"
-        settings.numberOfTrianglesOnX = fileContents["numberOfTriangleMode"] #Fill from the JSON results file, tmp value
-        settings.xAxisMin = fileContents[""] #Fill from the results file
-        settings.xAxisMax = fileContents[""] #Fill from the results file
-        settings.xTick = 5 # Dummy value, needs to be tuned
+        settings.reverse = False
+        #settings.workloadType = fileContents["workloadType"] #Fill from the JSON results file, tmp value
+        settings.xAxisMin = 0
+        settings.xAxisMax = 0
+        settings.binCount = 10
+        settings.xTick = 10
         settings.xAxisOutOfRangeMode = 'clamp'
         settings.xAxisTitleAdjustment = 0
-        settings.binCount = 35
-        settings.readValueX = lambda x: x["numberOfPoints"] #from the results file
-    elif experimentName == "executionTime-batchSize":
-        settings.chartShortName = "?"
-        settings.xAxisTitle = "bathcSize" #Adjust
-        settings.yAxisTitle = "Execution Time"
-        settings.numberOfTrianglesOnX = fileContents["batchSize"] #Fill from the JSON results file, tmp value
-        settings.xAxisMin = fileContents[""] #Fill from the results file
-        settings.xAxisMax = fileContents[""] #Fill from the results file
-        settings.xTick = 5 # Dummy value, needs to be tuned
-        settings.xAxisOutOfRangeMode = 'clamp'
-        settings.xAxisTitleAdjustment = 0
-        settings.binCount = 35
-        settings.readValueX = lambda x: x["batchSize"] #from the results file
+        return settings
     
     elif experimentName == "experiment1-level1-occlusion-only":
         settings.chartShortName = "Occlusion"
@@ -243,6 +249,7 @@ def getProcessingSettings(mode, fileContents):
         settings.xAxisOutOfRangeMode = 'discard'
         settings.xAxisMin = 0
         settings.xAxisMax = 1
+        settings.xAxisBounds = [0, 1]
         settings.xTick = 0.2
         settings.enable2D = False
         settings.reverse = True
@@ -291,29 +298,57 @@ def getProcessingSettings(mode, fileContents):
         settings.chartShortName = "Occlusion on both"
         settings.xAxisTitle = "Common Area"
         settings.yAxisTitle = sharedYAxisTitle
-        settings.xAxisOutOfRangeMode = 'discard'
-        settings.xAxisTitleAdjustment = 0
+        settings.xAxisOutOfRangeMode = 'clamp'
         settings.xAxisMin = 0
         settings.xAxisMax = 1
         settings.xTick = 0.2
-        settings.binCount = 35 #25 50 35
         settings.enable2D = False
         settings.reverse = False
         settings.readValueX = lambda x: x["sceneObject"]["filterOutput"]["multi-view-occlusion-common-area"]
+        
+        '''settings.chartShortName = "Occlusion on both"
+        settings.xAxisTitle = "Common Area"
+        settings.yAxisTitle = "Occlusion"
+        settings.xAxisOutOfRangeMode = 'discard'
+        settings.xAxisTitleAdjustment = 0
+        settings.xAxisBounds = [0, 1]
+        settings.yAxisBounds = [0, 1]
+        settings.xTick = 0.2
+        settings.yTick = 0.2
+        settings.binCount = 35 #25 50 35
+        settings.enable2D = True
+        settings.reverseX = False
+        settings.reverseY = True
+        settings.readValueX = lambda x: x["sceneObject"]["filterOutput"]["multi-view-occlusion-common-area"]
+        settings.readValueY = lambda x: x["modelObject"]["fractionSurfacePartiality"]'''
         return settings
     elif experimentName == "experiment6-level2-occlusion-fixed-gaussian-both":
-        settings.chartShortName = "Occlusion on both and fixed gaussian"
+        settings.chartShortName = "Occlusion on both with gaussian noise"
         settings.xAxisTitle = "Common Area"
         settings.yAxisTitle = sharedYAxisTitle
-        settings.xAxisOutOfRangeMode = 'discard'
-        settings.xAxisTitleAdjustment = 0
+        settings.xAxisOutOfRangeMode = 'clamp'
         settings.xAxisMin = 0
         settings.xAxisMax = 1
         settings.xTick = 0.2
-        settings.binCount = 35 #25 50 35
         settings.enable2D = False
         settings.reverse = False
         settings.readValueX = lambda x: x["sceneObject"]["filterOutput"]["multi-view-occlusion-common-area"]
+        
+        '''settings.chartShortName = "Occlusion on both and fixed gaussian"
+        settings.xAxisTitle = "Common Area"
+        settings.yAxisTitle = "Occlusion"
+        settings.xAxisOutOfRangeMode = 'clamp'
+        settings.xAxisTitleAdjustment = 0
+        settings.xAxisBounds = [0, 1]
+        settings.yAxisBounds = [0, 1]
+        settings.xTick = 0.2
+        settings.yTick = 0.2
+        settings.binCount = 35 #25 50 35
+        settings.enable2D = True
+        settings.reverseX = False
+        settings.reverseY = True
+        settings.readValueX = lambda x: x["sceneObject"]["filterOutput"]["multi-view-occlusion-common-area"]
+        settings.readValueY = lambda x: x["modelObject"]["fractionSurfacePartiality"]'''
         return settings
     elif experimentName == "experiment7-level2-occlusion-both-clutter":
         settings.chartShortName = "Occlusion on both and clutter"
@@ -353,16 +388,16 @@ def getProcessingSettings(mode, fileContents):
         settings.chartShortName = "Ultimate test"
         settings.xAxisTitle = "Occlusion"
         settings.yAxisTitle = sharedYAxisTitle
-        settings.zAxisTitle = "Clutter"
-        settings.wAxisTitle = "Vertex displacement distance" #Vertex displacement distance
+        settings.zAxisTitle = "Vertex displacement" #Vertex displacement distance
+        settings.wAxisTitle = "Clutter"
         settings.xAxisOutOfRangeMode = 'clamp'
         settings.xAxisTitleAdjustment = 0
         settings.xAxisBounds = [0, 1]
-        settings.zAxisBounds = [0, 2]
-        settings.wAxisBounds = [0, 0.15]
+        settings.zAxisBounds = [0, 0.15]
+        settings.wAxisBounds = [0, 2]
         settings.xTick = 0.2
-        settings.zTick = 1
-        settings.wTick = (settings.wAxisBounds[1] - settings.wAxisBounds[0])/5
+        settings.zTick = (settings.zAxisBounds[1] - settings.zAxisBounds[0])/5
+        settings.wTick = 1
         settings.binCount = 35
         settings.enable2D = False
         settings.enable3D = True
@@ -370,8 +405,8 @@ def getProcessingSettings(mode, fileContents):
         settings.reverseZ = False
         settings.reverseW = False
         settings.readValueX = lambda x: x["sceneObject"]["fractionSurfacePartiality"]
-        settings.readValueZ = lambda x: x["sceneObject"]["fractionAddedNoise"]
-        settings.readValueW = lambda x: x["sceneObject"]["filterOutput"]["triangle-shift-average-edge-length"]
+        settings.readValueZ = lambda x: x["sceneObject"]["filterOutput"]["triangle-shift-average-edge-length"]
+        settings.readValueW = lambda x: x["sceneObject"]["fractionAddedNoise"]
         return settings
     else:
         raise Exception("Failed to determine chart settings: Unknown experiment name: " + experimentName)
@@ -596,8 +631,8 @@ def generateSupportRadiusChart(results_directory, output_directory):
             else:
                 countsFigure.update_layout(showlegend=False)
 
-            pio.defaults.default_width = chartWidth
-            pio.defaults.default_height = 300
+            pio.kaleido.scope.default_width = chartWidth
+            pio.kaleido.scope.default_height = 300
 
             countsFigure.add_trace(go.Scatter(x=xValues, y=yValues_Sequence1, mode='lines', name="Min"))
             countsFigure.add_trace(go.Scatter(x=xValues, y=yValues_Sequence2, mode='lines', name="Mean"))
@@ -610,7 +645,7 @@ def generateSupportRadiusChart(results_directory, output_directory):
 
             outputFile = os.path.join(output_directory, "support-radius-" + methodName + ".pdf")
 
-            pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
+            pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
     print('Done.')
 
 
@@ -679,14 +714,14 @@ def create2DChart(rawResults, configuration, settings, output_directory, jsonFil
     if jsonFilePath is not jsonFilePaths[-1]:
         stackFigure.update_coloraxes(showscale=False)
         stackFigure.update_traces(showscale=False)
-        pio.defaults.default_width = 300
-        pio.defaults.default_height = 300
+        pio.kaleido.scope.default_width = 300
+        pio.kaleido.scope.default_height = 300
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
             xAxisTitle += 't'
     else:
-        pio.defaults.default_width = 368
-        pio.defaults.default_height = 300
+        pio.kaleido.scope.default_width = 368
+        pio.kaleido.scope.default_height = 300
 
     stackFigure.update_layout(xaxis_title=xAxisTitle, yaxis_title=settings.yAxisTitle,
                               margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
@@ -695,7 +730,7 @@ def create2DChart(rawResults, configuration, settings, output_directory, jsonFil
     #stackFigure.show()
 
     outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
-    pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
+    pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
 
 
 
@@ -752,10 +787,12 @@ def createChart(results_directory, output_directory, mode):
                 createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonFilePaths)
                 continue
             elif settings.enable3D:
-                createDDI3DChart(rawResults, settings, output_directory)
+                #allAreas = {}
+                #allAreas[settings.methodName] = createDDI3DChart(rawResults, settings, output_directory)
                 continue
             else:
                 stackedXValues, stackedYValues, stackedLabels, counts, areaUnderCurves = computeStackedHistogram(rawResults, jsonContents["configuration"], settings)
+            
             allCounts.append(counts)
 
             areaUnderDDIZeroCurve = 0
@@ -786,7 +823,7 @@ def createChart(results_directory, output_directory, mode):
                 stackFigure.add_trace(
                     go.Scatter(x=stackedXValues, y=yValueStack, name=stackedLabels[index], stackgroup="main"))
             if settings.PRCEnabled:
-                stackFigure.add_trace(go.Scatter(x=stackedXValues, y=areaUnderCurves, name="AUC"))
+                stackFigure.add_trace(go.Scatter(x=stackedXValues, y=areaUnderCurves, name="AUC", line_color=pio.templates[pio.templates.default].layout.colorway[7]))
 
             xAxisTitle = settings.xAxisTitle
             if jsonFilePath is not jsonFilePaths[-1]:
@@ -795,11 +832,11 @@ def createChart(results_directory, output_directory, mode):
                     xAxisTitle += 't'
                 stackFigure.update_layout(showlegend=False)
                 titleX = 0.5
-                pio.defaults.default_width = 300
-                pio.defaults.default_height = 300
+                pio.kaleido.scope.default_width = 300
+                pio.kaleido.scope.default_height = 300
             else:
-                pio.defaults.default_width = 475
-                pio.defaults.default_height = 300
+                pio.kaleido.scope.default_width = 475
+                pio.kaleido.scope.default_height = 300
                 titleX = (float(200) / float(500)) * 0.5
 
             stackFigure.update_yaxes(range=[0, 1])
@@ -815,7 +852,7 @@ def createChart(results_directory, output_directory, mode):
                     outputFileIndex += 1
                     outputFile = os.path.join(output_directory,
                                               settings.experimentName + "-" + settings.methodName + '-' + str(outputFileIndex) + ".pdf")
-            pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
+            pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
             
             # single DDI Chart
             DDIChart = go.Figure()
@@ -829,11 +866,11 @@ def createChart(results_directory, output_directory, mode):
                     xAxisTitle += 't'
                 DDIChart.update_layout(showlegend=False)
                 titleX = 0.5
-                pio.defaults.default_width = 300
-                pio.defaults.default_height = 300
+                pio.kaleido.scope.default_width = 300
+                pio.kaleido.scope.default_height = 300
             else:
-                pio.defaults.default_width = 475
-                pio.defaults.default_height = 300
+                pio.kaleido.scope.default_width = 475
+                pio.kaleido.scope.default_height = 300
                 titleX = (float(200) / float(500)) * 0.5
             
             DDIChart.update_yaxes(range=[0, 1])
@@ -854,7 +891,7 @@ def createChart(results_directory, output_directory, mode):
                     outputFileIndex += 1
                     outputFile = os.path.join(output_directory,
                                               settings.experimentName + "-" + settings.methodName + '-' + str(outputFileIndex) + ".pdf")
-            pio.write_image(DDIChart, outputFile, format='pdf', validate=True)
+            pio.write_image(DDIChart, outputFile, engine="kaleido", validate=True)
 
     if not settings.enable2D and not settings.enable3D:
         print('Writing counts chart..')
@@ -875,9 +912,9 @@ def createChart(results_directory, output_directory, mode):
         #countsFigure.update_layout(
         #    legend=dict(y=0, orientation="h", yanchor="bottom", yref="container", xref="paper", xanchor="left"))
         outputFile = os.path.join(output_directory, lastSettings.experimentName + "-counts.pdf")
-        pio.defaults.default_width = 435
-        pio.defaults.default_height = 300
-        pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
+        pio.kaleido.scope.default_width = 435
+        pio.kaleido.scope.default_height = 300
+        pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
         return (chartAreas, settings.chartShortName)
 
     print('Done.')
@@ -902,9 +939,9 @@ def writeOverviewChart(contents, outputFile):
                               categoryarray=['Clutter', 'Occlusion', 'Alternate<br>triangulation', 'Deviating<br>normal vector', 'Deviating<br>support radius', 'Gaussian<br>noise', 'Alternate<br>mesh resolution'])
     countsFigure.update_yaxes(range=[0, 1], dtick=0.1)
     countsFigure.update_layout(margin={'t': 0, 'l': 0, 'b': 0, 'r': 0}, font=dict(size=18), yaxis_title='Normalised DDI AUC')
-    pio.defaults.default_width = 1400
-    pio.defaults.default_height = 300
-    pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
+    pio.kaleido.scope.default_width = 1400
+    pio.kaleido.scope.default_height = 300
+    pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
 
 #DDI Charts for multiple filters and not 
 
@@ -923,7 +960,7 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     for j in range(yBinCount):
         histogramTotal.append([0] * (xBinCount + 1))
         histogramAccepted.append([0] * (xBinCount + 1))
-        labels.append(f'{(settings.yAxisBounds[0] + j * settings.yTick):.2f} - {(settings.yAxisBounds[0] + (j + 1) * settings.yTick):.2f}')
+        labels.append(f'{(settings.yAxisBounds[0] + j * settings.yTick):.3f} - {(settings.yAxisBounds[0] + (j + 1) * settings.yTick):.3f}')
     
     removedCount = 0 
 
@@ -976,14 +1013,14 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     if jsonFilePath is not jsonFilePaths[-1]:
         stackFigure.update_coloraxes(showscale=False)
         stackFigure.update_traces(showlegend=False)
-        pio.defaults.default_width = 300
-        pio.defaults.default_height = 300
+        pio.kaleido.scope.default_width = 300
+        pio.kaleido.scope.default_height = 300
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
             xAxisTitle += 't'
     else:
-        pio.defaults.default_width = 500
-        pio.defaults.default_height = 300
+        pio.kaleido.scope.default_width = 500
+        pio.kaleido.scope.default_height = 300
     
     if settings.xAxisTitleAdjustment > 0:
         xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1000,86 +1037,192 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     stackFigure.update_xaxes(range=settings.xAxisBounds)
 
     outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + "-2DChart.pdf")
-    pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
-
-def createDDI3DChart(rawResults, settings, output_directory):
-    #initialize histogram 
-    # NOTE: x-axis -> one filter, y-axis -> proportion of DDI, z-axis -> other filter
-    xBinCount = settings.binCount
-    deltaX = (settings.xAxisBounds[1] - settings.xAxisBounds[0]) / xBinCount
-    deltaZ = settings.zTick
-    zBinCount = int((settings.zAxisBounds[1] - settings.zAxisBounds[0]) / deltaZ)
-    deltaW = settings.wTick
-    wBinCount = int((settings.wAxisBounds[1] - settings.wAxisBounds[0]) / deltaW)
+    pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+ 
+def createDDI3DChart_old(results_directory, output_directory, mode):
+    jsonFilePaths = [x.name for x in os.scandir(results_directory) if x.name.endswith(".json")]
+    jsonFilePaths.sort()
     
-    histogramsTotal = []
-    histogramsAccepted = []
-    labels = [settings.zAxisTitle]
-    titles = []
-    for k in range(wBinCount):
-        histogramTotal = []
-        histogramAccepted = []
-        for j in range(zBinCount):
-            histogramTotal.append([0] * (xBinCount + 1))
-            histogramAccepted.append([0] * (xBinCount + 1))
-            labels.append(f'{settings.zAxisBounds[0] + j * settings.zTick} - {settings.zAxisBounds[0] + (j + 1) * settings.zTick}')
-        histogramsTotal.append(histogramTotal)
-        histogramsAccepted.append(histogramAccepted)
-        titles.append(f'{settings.wAxisTitle} -- {settings.wAxisBounds[0] + k * settings.wTick} - {settings.wAxisBounds[0] + (k + 1) * settings.wTick}')
+    allAreas = {}
+
+    for jsonFilePath in jsonFilePaths:
+        with open(os.path.join(results_directory, jsonFilePath)) as inFile:
+            print('Loading file: {}'.format(jsonFilePath))
+            jsonContents = json.load(inFile)
+            settings = getProcessingSettings(mode, jsonContents)
+            print('Creating chart for method ' + settings.methodName + "..")
+            lastSettings = settings
+            dataSequence, rawResults = processSingleFile(jsonContents, settings)
+            #initialize histogram 
+            # NOTE: x-axis -> one filter, y-axis -> proportion of DDI, z-axis -> other filter
+            xBinCount = settings.binCount
+            deltaX = (settings.xAxisBounds[1] - settings.xAxisBounds[0]) / xBinCount
+            deltaZ = settings.zTick
+            zBinCount = int((settings.zAxisBounds[1] - settings.zAxisBounds[0]) / deltaZ)
+            deltaW = settings.wTick
+            wBinCount = int((settings.wAxisBounds[1] - settings.wAxisBounds[0]) / deltaW)
+            
+            histogramsTotal = []
+            histogramsAccepted = []
+            labels = [settings.zAxisTitle]
+            titles = []
+            for k in range(wBinCount):
+                histogramTotal = []
+                histogramAccepted = []
+                for j in range(zBinCount):
+                    histogramTotal.append([0] * (xBinCount + 1))
+                    histogramAccepted.append([0] * (xBinCount + 1))
+                    labels.append(f'{settings.zAxisBounds[0] + j * settings.zTick} - {settings.zAxisBounds[0] + (j + 1) * settings.zTick}')
+                histogramsTotal.append(histogramTotal)
+                histogramsAccepted.append(histogramAccepted)
+                titles.append(f'{settings.wAxisTitle} -- {settings.wAxisBounds[0] + k * settings.wTick} - {settings.wAxisBounds[0] + (k + 1) * settings.wTick}')
+            
+            removedCount = 0 
+
+            for rawResult in rawResults:
+                # Ignore the PRC information for this chart type
+                resultX, resultZ, resultW, rank, _ = rawResult
+                if resultX is None:
+                    resultX = 0
+                if resultZ is None:
+                    resultZ = 0
+                if resultW is None:
+                    resultW = 0
+                if settings.reverseX:
+                    resultX = settings.xAxisBounds[1] - resultX
+                if settings.reverseZ:
+                    resultZ = settings.zAxisBounds[1] - resultZ
+                if settings.reverseW:
+                    resultW = settings.wAxisBounds[1] - resultW
+
+                if resultX < settings.xAxisBounds[0] or resultX > settings.xAxisBounds[1]:
+                    if settings.xAxisOutOfRangeMode == 'discard':
+                        removedCount += 1
+                        continue
+                    elif settings.xAxisOutOfRangeMode == 'clamp':
+                        resultX = max(settings.xAxisBounds[0], min(settings.xAxisBounds[1], rawResult[0]))
+                #Maybe to be removed or maybe implemented like for the xAxis one 
+                if resultZ < settings.zAxisBounds[0] or resultZ > settings.zAxisBounds[1]:
+                    removedCount += 1
+                    continue
+                #Maybe to be removed
+                if resultW < settings.wAxisBounds[0] or resultW > settings.wAxisBounds[1]:
+                    removedCount += 1
+                    continue
+
+                binIndexX = min(xBinCount - 1, int((resultX - settings.xAxisBounds[0]) / deltaX)) #NOTE: There must be a prittier way to do this
+                binIndexZ = min(zBinCount - 1, int((resultZ - settings.zAxisBounds[0]) / deltaZ))
+                binIndexW = min(wBinCount - 1, int((resultW - settings.wAxisBounds[0]) / deltaW))
+                #binIndexY = int(0 if rank == 0 else (math.log10(rank)+1))
+                if rank == 0:
+                    histogramsAccepted[binIndexW][binIndexZ][binIndexX] += 1
+                histogramsTotal[binIndexW][binIndexZ][binIndexX] += 1
+
+            for k in range(wBinCount):
+                for j in range(zBinCount):
+                    for i in range(xBinCount):
+                        if histogramsTotal[k][j][i] < 10:
+                            histogramsAccepted[k][j][i] = 0
+                        else:
+                            histogramsAccepted[k][j][i] = float(histogramsAccepted[k][j][i]) / histogramsTotal[k][j][i]
+
+            print("Removed", removedCount, "samples")
+
+            xValues = [((float(x + 1) * deltaX) + settings.xAxisBounds[0]) for x in range(settings.binCount)]
+            #print(f'{xValues}')
+
+            # Computing the areas
+            areasUnderTheCurve = []
+            for _ in range(wBinCount):
+                tmp = [[0, 0] for _ in range(2)]
+                areasUnderTheCurve.append(tmp)
+
+            # defining thresholds
+            thresholdOcclusion = 0.3
+            thresholdClutter = 1
+            thresholdVertex = 0.07
+
+            tOcclusionBin = min(xBinCount - 1, int((thresholdOcclusion - settings.xAxisBounds[0]) / deltaX))
+            tClutterBin = min(wBinCount - 1, int((thresholdClutter - settings.wAxisBounds[0]) / deltaW))
+            tVertexBin = min(zBinCount - 1, int((thresholdVertex - settings.zAxisBounds[0]) / deltaZ))
+
+            #Computing the area under the curve 
+            for binW in range(wBinCount):
+                #print(f'Clutter index: {binW = }')
+                finalAUCLow = 0
+                finalAUCHigh = 0
+                for binZ in range(zBinCount):
+                    #print(f'\tVErtex index: {binZ = }')
+                    points1 = histogramsAccepted[binW][binZ][:-2]
+                    points2 = histogramsAccepted[binW][binZ][2:]
+                    assert len(points1) == len(points2), f'{len(points1) = }\t{len(points2) = }'
+
+                    areaLow = np.sum([(p2+p1)/2*deltaX for p1, p2 in zip(points1[:tOcclusionBin+1], points2[:tOcclusionBin+1])])
+                    areaHigh = np.sum([(p2+p1)/2*deltaX for p1, p2 in zip(points1[tOcclusionBin:], points2[tOcclusionBin:])])
+                    
+                    if binZ <= tVertexBin:
+                        areasUnderTheCurve[binW][0][0] += areaLow 
+                        areasUnderTheCurve[binW][0][1] += areaHigh
+                    else:
+                        areasUnderTheCurve[binW][1][0] += areaLow
+                        areasUnderTheCurve[binW][1][1] += areaHigh
+
+                    area  =  0
+                    for p1, p2 in zip(points1, points2):
+                        average = (p2+p1)/2
+                        area += average * deltaX
+                    
+                    #print(f'\t\t{area}')
+                    #print(f'\t\t\t{areaLow = }\n\t\t\t{areaHigh = }')
+                    #print(f'\t\t\t{finalAUCLow = }\n\t\t\t{finalAUCHigh = }')
+                    #print(f'\t\t\t{areaLow+areaHigh = }')
+
+            allAreas[settings.methodName] = areasUnderTheCurve
+        '''
+        print(f'{allAreas}')
+        print(areasUnderTheCurve)
+        print(f'{xBinCount = }')
+        print(f'{wBinCount = }')
+        print(f'{zBinCount = }')
+        print(f'{tOcclusionBin = }')
+        print(f'{tClutterBin = }')
+        print(f'{tVertexBin = }')
+        '''
+    yAxisTitle = 'Area under DDI curve'
+
+    barChart = go.Figure()
+    methods = list(allAreas.keys())
+
     
-    removedCount = 0 
+    for w in range(2):
+        clutter = '≤ 1' if w == 0 else '> 1'
+        for z in range(2):
+            vertex = '≤ 0.07' if z == 0 else '> 0.07'
+            for x in range(2):
+                occlusion = '≤ 0.3' if x == 0 else '> 0.3'
+                name = f'Clutter {clutter};\tVertex Displacement {vertex};\tOcclusion {occlusion}'
+                barChart.add_trace(go.Bar(name=name, x=methods, y=[allAreas[methodName][w][z][x] for methodName in methods]))
+    
+    barChart.update_coloraxes(showscale=False)
+    pio.kaleido.scope.default_width = 600
+    pio.kaleido.scope.default_height = 900
 
-    for rawResult in rawResults:
-        # Ignore the PRC information for this chart type
-        resultX, resultZ, resultW, rank, _ = rawResult
-        if resultX is None:
-            resultX = 0
-        if resultZ is None:
-            resultZ = 0
-        if resultW is None:
-            resultW = 0
-        if settings.reverseX:
-            resultX = settings.xAxisBounds[1] - resultX
-        if settings.reverseZ:
-            resultZ = settings.zAxisBounds[1] - resultZ
-        if settings.reverseW:
-            resultW = settings.wAxisBounds[1] - resultW
+    barChart.update_layout(yaxis_title=yAxisTitle,
+                           margin={'t':30, 'l':10, 'b':100, 'r':5},
+                           font=dict(size=18),
+                           legend = dict(yanchor='top',
+                                         y=-0.2,
+                                         xanchor='center',
+                                         x=0.5,))
+                                         #bgcolor="rgba(212, 203, 203, 0.5)",
+                                         #title=dict(text='Clutter; Vertex Displacement; Occlusion'))
 
-        if resultX < settings.xAxisBounds[0] or resultX > settings.xAxisBounds[1]:
-            if settings.xAxisOutOfRangeMode == 'discard':
-                removedCount += 1
-                continue
-            elif settings.xAxisOutOfRangeMode == 'clamp':
-                resultX = max(settings.xAxisBounds[0], min(settings.xAxisBounds[1], rawResult[0]))
-        #Maybe to be removed or maybe implemented like for the xAxis one 
-        if resultZ < settings.zAxisBounds[0] or resultZ > settings.zAxisBounds[1]:
-            removedCount += 1
-            continue
-        #Maybe to be removed
-        if resultW < settings.wAxisBounds[0] or resultW > settings.wAxisBounds[1]:
-            removedCount += 1
-            continue
 
-        binIndexX = min(xBinCount - 1, int((resultX - settings.xAxisBounds[0]) / deltaX)) #NOTE: There must be a prittier way to do this
-        binIndexZ = min(zBinCount - 1, int((resultZ - settings.zAxisBounds[0]) / deltaZ))
-        binIndexW = min(wBinCount - 1, int((resultW - settings.wAxisBounds[0]) / deltaW))
-        #binIndexY = int(0 if rank == 0 else (math.log10(rank)+1))
-        if rank == 0:
-            histogramsAccepted[binIndexW][binIndexZ][binIndexX] += 1
-        histogramsTotal[binIndexW][binIndexZ][binIndexX] += 1
+                           #legend = 
 
-    for k in range(wBinCount):
-        for j in range(zBinCount):
-            for i in range(xBinCount):
-                if histogramsTotal[k][j][i] < 10:
-                    histogramsAccepted[k][j][i] = None
-                else:
-                    histogramsAccepted[k][j][i] = float(histogramsAccepted[k][j][i]) / histogramsTotal[k][j][i]
-
-    print("Removed", removedCount, "samples")
-
-    xValues = [((float(x + 1) * deltaX) + settings.xAxisBounds[0]) for x in range(settings.binCount)]
-
+    outputFile = os.path.join(output_directory, f"exxperiment-9-barPlot.pdf")
+    pio.write_image(barChart, outputFile, engine='kaleido', validate=True)
+    '''
     for cIndex, chart in enumerate(histogramsAccepted):
         stackFigure = go.Figure()
         for index, yValueStack in enumerate(chart):
@@ -1091,14 +1234,14 @@ def createDDI3DChart(rawResults, settings, output_directory):
         if chart is not histogramsAccepted[-1]:
             stackFigure.update_coloraxes(showscale=False)
             stackFigure.update_traces(showlegend=False)
-            pio.defaults.default_width = 500
-            pio.defaults.default_height = 300
+            pio.kaleido.scope.default_width = 250
+            pio.kaleido.scope.default_height = 300
             if settings.xAxisTitleAdjustment > 0:
                 xAxisTitle += ' ' * settings.xAxisTitleAdjustment
                 xAxisTitle += 't'
         else:
-            pio.defaults.default_width = 500
-            pio.defaults.default_height = 300
+            pio.kaleido.scope.default_width = 500
+            pio.kaleido.scope.default_height = 300
         
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1118,93 +1261,573 @@ def createDDI3DChart(rawResults, settings, output_directory):
         stackFigure.update_yaxes(range=[0, 1])
 
         outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + "-3D" + str(cIndex) + "-Chart.pdf")
-        pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
+        pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+        '''
 
-#   NOTE: Integrate this function inside the createChart one
-def executionTimeChart(results_directory, output_directory, mode):
-    # Produce a chart where on the xAxis is the numberOfPoints or the batchSize
-    # and in the y axis the execution time it takes for the method to compute the
-    # descriptors. Define a binning in on the x axis, the take the mean value of all
-    # the execution times inside each bin.
-    
-    # The function retrieves the file containing the values of the execution time experiment
-    # this bit might be change acording to how the results are saved
+def createDDI3DChart(results_directory, output_directory, mode):
     jsonFilePaths = [x.name for x in os.scandir(results_directory) if x.name.endswith(".json")]
     jsonFilePaths.sort()
-    
-    for jsonFile in jsonFilePaths:
-        with open(os.path.join(results_directory, jsonFile)) as inFile:
-            print('Loading file: {}'.format(jsonFile))
+
+    allAreas = {}
+
+    for jsonFilePath in jsonFilePaths:
+        with open(os.path.join(results_directory, jsonFilePath)) as inFile:
+            print('Loading file: {}'.format(jsonFilePath))
             jsonContents = json.load(inFile)
             settings = getProcessingSettings(mode, jsonContents)
             print('Creating chart for method ' + settings.methodName + "..")
+            lastSettings = settings
+            dataSequence, rawResults = processSingleFile(jsonContents, settings)
+            #initialize histogram
+            # NOTE: x-axis -> one filter, y-axis -> proportion of DDI, z-axis -> other filter
+            xBinCount = settings.binCount
+            deltaX = (settings.xAxisBounds[1] - settings.xAxisBounds[0]) / xBinCount
+            deltaZ = settings.zTick
+            zBinCount = int((settings.zAxisBounds[1] - settings.zAxisBounds[0]) / deltaZ)
+            deltaW = settings.wTick
+            wBinCount = int((settings.wAxisBounds[1] - settings.wAxisBounds[0]) / deltaW)
 
-            deltaX = (settings.xAxisMax - settings.xAxisMin) / settings.binCount
+            histogramsTotal = []
+            histogramsAccepted = []
+            labels = [settings.zAxisTitle]
+            titles = []
+            for k in range(wBinCount):
+                histogramTotal = []
+                histogramAccepted = []
+                for j in range(zBinCount):
+                    histogramTotal.append([0] * (xBinCount + 1))
+                    histogramAccepted.append([0] * (xBinCount + 1))
+                    labels.append(f'{settings.zAxisBounds[0] + j * settings.zTick} - {settings.zAxisBounds[0] + (j + 1) * settings.zTick}')
+                histogramsTotal.append(histogramTotal)
+                histogramsAccepted.append(histogramAccepted)
+                titles.append(f'{settings.wAxisTitle} -- {settings.wAxisBounds[0] + k * settings.wTick} - {settings.wAxisBounds[0] + (k + 1) * settings.wTick}')
 
-            results = []
+            removedCount = 0
 
-            for result in jsonContents["results"]:
-                results.append([settings.readVauleX(result), jsonContents["results"]["executionTimeInMS"]])
+            for rawResult in rawResults:
+                # Ignore the PRC information for this chart type
+                resultX, resultZ, resultW, rank, _ = rawResult
+                if resultX is None:
+                    resultX = 0
+                if resultZ is None:
+                    resultZ = 0
+                if resultW is None:
+                    resultW = 0
+                if settings.reverseX:
+                    resultX = settings.xAxisBounds[1] - resultX
+                if settings.reverseZ:
+                    resultZ = settings.zAxisBounds[1] - resultZ
+                if settings.reverseW:
+                    resultW = settings.wAxisBounds[1] - resultW
 
-            histogram = []
-            for _ in range(settings.binCount):
-                histogram.append([])
-
-            for result in results:
-                if result[0] is None:
-                    result[0] = 0
-                if result[0] < settings.xAxisMin or result[0] > settings.xAxisMax:
+                if resultX < settings.xAxisBounds[0] or resultX > settings.xAxisBounds[1]:
                     if settings.xAxisOutOfRangeMode == 'discard':
                         removedCount += 1
                         continue
                     elif settings.xAxisOutOfRangeMode == 'clamp':
-                        result[0] = max(settings.xAxisMin, min(settings.xAxisMax, result[0]))
+                        resultX = max(settings.xAxisBounds[0], min(settings.xAxisBounds[1], rawResult[0]))
+                #Maybe to be removed or maybe implemented like for the xAxis one
+                if resultZ < settings.zAxisBounds[0] or resultZ > settings.zAxisBounds[1]:
+                    removedCount += 1
+                    continue
+                #Maybe to be removed
+                if resultW < settings.wAxisBounds[0] or resultW > settings.wAxisBounds[1]:
+                    removedCount += 1
+                    continue
 
-                if settings.reverse:
-                    result[0] = (settings.xAxisMax + settings.xAxisMin) - result[0]
+                binIndexX = min(xBinCount - 1, int((resultX - settings.xAxisBounds[0]) / deltaX)) #NOTE: There must be a prittier way to do this
+                binIndexZ = min(zBinCount - 1, int((resultZ - settings.zAxisBounds[0]) / deltaZ))
+                binIndexW = min(wBinCount - 1, int((resultW - settings.wAxisBounds[0]) / deltaW))
+                #binIndexY = int(0 if rank == 0 else (math.log10(rank)+1))
+                if rank == 0:
+                    histogramsAccepted[binIndexW][binIndexZ][binIndexX] += 1
+                histogramsTotal[binIndexW][binIndexZ][binIndexX] += 1
 
-                binIndexX = int((result[0] - settings.xAxisMin) / deltaX)
-                histogram[binIndexX].append(result[1])
+            for k in range(wBinCount):
+                for j in range(zBinCount):
+                    for i in range(xBinCount):
+                        if histogramsTotal[k][j][i] < 10:
+                            histogramsAccepted[k][j][i] = 0
+                        else:
+                            histogramsAccepted[k][j][i] = float(histogramsAccepted[k][j][i]) / histogramsTotal[k][j][i]
 
-            xValues = [((float(x + 1) * deltaX) + settings.xAxisMin) for x in range(settings.binCount)]
-            # Taking the mean over each bin
-            dataToPlot = {
-                'xAxis': xValues,
-                'yAxis': []
-            }
-            for bin in histogram:
-                binMean = np.mean(bin)
-                dataToPlot['yAxis'].append(binMean)
+            print("Removed", removedCount, "samples")
 
-            yAxisMin, yAxisMax = np.min(dataToPlot["yAxis"]), np.max(dataToPlot["yAxis"])
-            yTick = (yAxisMax - yAxisMin) / 5
+            xValues = [((float(x + 1) * deltaX) + settings.xAxisBounds[0]) for x in range(settings.binCount)]
+            #print(f'{xValues}')
 
+            # Computing the areas
+            areasUnderTheCurve = []
+            for _ in range(wBinCount):
+                tmp = [[0, 0] for _ in range(2)]
+                areasUnderTheCurve.append(tmp)
+
+            # defining thresholds
+            thresholdOcclusion = 0.3
+            thresholdClutter = 1
+            thresholdVertex = 0.07
+
+            tOcclusionBin = min(xBinCount - 1, int((thresholdOcclusion - settings.xAxisBounds[0]) / deltaX))
+            tClutterBin = min(wBinCount - 1, int((thresholdClutter - settings.wAxisBounds[0]) / deltaW))
+            tVertexBin = min(zBinCount - 1, int((thresholdVertex - settings.zAxisBounds[0]) / deltaZ))
+
+            #Computing the area under the curve
+            for binW in range(wBinCount):
+                finalAUCLow = 0
+                finalAUCHigh = 0
+                for binZ in range(zBinCount):
+                    points1 = histogramsAccepted[binW][binZ][:-2]
+                    points2 = histogramsAccepted[binW][binZ][2:]
+                    assert len(points1) == len(points2), f'{len(points1) = }\t{len(points2) = }'
+
+                    areaLow = np.sum([(p2+p1)/2*deltaX for p1, p2 in zip(points1[:tOcclusionBin+1], points2[:tOcclusionBin+1])])
+                    areaHigh = np.sum([(p2+p1)/2*deltaX for p1, p2 in zip(points1[tOcclusionBin:], points2[tOcclusionBin:])])
+
+                    if binZ <= tVertexBin:
+                        areasUnderTheCurve[binW][0][0] += areaLow
+                        areasUnderTheCurve[binW][0][1] += areaHigh
+                    else:
+                        areasUnderTheCurve[binW][1][0] += areaLow
+                        areasUnderTheCurve[binW][1][1] += areaHigh
+
+                    area = 0
+                    for p1, p2 in zip(points1, points2):
+                        average = (p2+p1)/2
+                        area += average * deltaX
+
+            allAreas[settings.methodName] = areasUnderTheCurve
+
+    yAxisTitle = 'Area under DDI curve'
+    methods_raw = list(allAreas.keys())
+    methods_raw.sort()
+
+    configuration_combinations = []
+    configuration_labels = []
+    clutter_statuses = []
+    vertex_statuses = []
+    occlusion_statuses = []
+
+    for w_idx, clutter_status in enumerate(['Low', 'High']):
+        for z_idx, vertex_status in enumerate(['Low', 'High']):
+            for x_idx, occlusion_status in enumerate(['Low', 'High']):
+                configuration_combinations.append((w_idx, z_idx, x_idx))
+                configuration_labels.append(f'C:{clutter_status} V:{vertex_status} O:{occlusion_status}')
+                clutter_statuses.append(clutter_status)
+                vertex_statuses.append(vertex_status)
+                occlusion_statuses.append(occlusion_status)
+
+    methods_with_auc = []
+    for method_name in methods_raw:
+        # Assuming you want to sort by the first AUC value for now
+        auc_value = allAreas[method_name][0][0][0]
+        methods_with_auc.append((auc_value, method_name))
+
+    methods_with_auc.sort()
+
+    methods = [method_name for auc_value, method_name in methods_with_auc]
+
+    fig = make_subplots(
+        rows=2, cols=2,
+        row_titles=['', ''],
+        vertical_spacing=0.02,
+        specs=[
+            [{"type": "pie"}, {"type": "xy"}],
+            [{"type": "table", 'colspan': 2}, None]
+        ],
+        row_heights=[0.85, 0.15], # Initial height distribution
+        column_widths=[0.01, 0.9]
+    )
+
+    fig.add_trace(go.Pie(values=[]), row=1, col=1)
+
+    for methodName in methods:
+        y_values_for_method = []
+        for w, z, x in configuration_combinations:
+            y_values_for_method.append(allAreas[methodName][w][z][x])
+
+        fig.add_trace(
+            go.Bar(name=methodName, x=configuration_labels, y=y_values_for_method),
+            row=1, col=2
+        )
+
+    num_config_columns = len(configuration_labels)
+    table_label_column_ratio = 0.11
+
+    relative_column_widths = [table_label_column_ratio] + [(1 - table_label_column_ratio) / num_config_columns] * num_config_columns
+    relative_column_widths = [w / sum(relative_column_widths) for w in relative_column_widths]
+
+    fig.update_layout(
+        barmode='group',
+        yaxis_title=yAxisTitle,
+        xaxis_title="",
+        margin={'t': 50, 'l': 0, 'b': 0, 'r': 20}, # Reduced left margin
+        font=dict(size=12),
+        xaxis=dict(
+            showticklabels=False,
+            categoryorder='array',
+            categoryarray=configuration_labels,
+            range=[-0.5, len(configuration_labels) - 0.5],
+            tickmode='array',
+            tickvals=list(range(len(configuration_labels))),
+        ),
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.0,
+            xanchor="center",
+            x=0.5
+        )
+    )
+
+    fill_colors = []
+    for i, status_type in enumerate([clutter_statuses, vertex_statuses, occlusion_statuses]):
+        row_colors = ['lavender']
+        for status in status_type:
+            if status == 'Low':
+                row_colors.append('rgba(200, 255, 200, 0.7)')
+            else:
+                row_colors.append('rgba(255, 200, 200, 0.7)')
+        fill_colors.append(row_colors)
+
+    table_cells_values = []
+    table_cells_values.append(["Clutter"] + clutter_statuses)
+    table_cells_values.append(["Vertex Disp."] + vertex_statuses)
+    table_cells_values.append(["Occlusion"] + occlusion_statuses)
+
+    fig.add_trace(
+        go.Table(
+            cells=dict(
+                values=np.array(table_cells_values).T,
+                fill_color=np.array(fill_colors).T,
+                align=['left'] + ['center'] * num_config_columns,
+                font=dict(size=10),
+                height=20
+            ),
+            header=dict(
+                values=[""] + [""] * num_config_columns,
+                fill_color='white',
+                align='center',
+                line_color='white',
+                height=0
+            ),
+            columnwidth=relative_column_widths
+        ),
+        row=2, col=1
+    )
+
+    fig.update_layout(
+        height=550,
+        width=1200,
+    )
+
+    pio.kaleido.scope.default_width = fig.layout.width
+    pio.kaleido.scope.default_height = fig.layout.height
+
+    outputFile = os.path.join(output_directory, f"experiment-9-combined_chart_and_table_final_v1.pdf")
+    pio.write_image(fig, outputFile, engine='kaleido', validate=True)
+    print(f"Experiment 9 chart saved to: {outputFile}")
+
+#   NOTE: Integrate this function inside the createChart one
+def executionTimeChart(results_directory, output_directory, mode):
+    jsonFilePaths = [x.name for x in os.scandir(results_directory) if x.name.endswith(".json")]
+    jsonFilePaths.sort()
+
+    diagram = {}
+    allMethods = {
+        'point': {'xAxis': []},
+        'triangle': {'xAxis': []}
+    }
+    barChart = {}
+
+    for jsonFile in jsonFilePaths:
+        with open(os.path.join(results_directory, jsonFile)) as inFile:
+            print('Loading file: {}'.format(jsonFile))
+            jsonContents = json.load(inFile)
+            workType = jsonContents['workloadType']
+            settings = getProcessingSettings(mode, jsonContents)
+            methodName = (Path(results_directory)/jsonFile).stem.split('_')[-2]
+            experimentName = 'synthetic'
+
+            compare = (jsonContents['results']['comparison']['comparisonsPerSecond'])
+            diagram[methodName] = compare
+            #print(f'Method: {methodName}')
+            #print(f'{compare = }')
+
+            # collect the four experiments
+            barChart[methodName] = []
+            allExpHisto = []
+
+            experiments = jsonContents['results']['generation']['syntheticScene']
+
+            for idx, experiment in enumerate(experiments):
+                results = []
+                xMin, xMax = 1e6, 0
+
+                # loading data for one experiment
+                for result in experiment:
+                    # respectively the x value and the y value for each chart
+                    workloadPerDescriptor = result['workloadPerDescriptor']
+                    if workloadPerDescriptor < xMin:
+                        xMin = workloadPerDescriptor
+
+                    if workloadPerDescriptor > xMax:
+                        xMax = workloadPerDescriptor
+
+                    results.append([workloadPerDescriptor, result['workloadItemsProcessed']/np.mean(np.array(result['executionTimes']))])
+
+                settings.xAxisMin, settings.xAxisMax = xMin, xMax
+                #print(settings.xAxisMin)
+                #print(settings.xAxisMax)
+                deltaX = (settings.xAxisMax - settings.xAxisMin)/settings.binCount
+                allMethods[workType]['xAxis'].append((settings.xAxisMin, settings.xAxisMax, deltaX))
+
+                # this section of the code to generate the bar chart
+                values = [result[1] for result in results]
+                barChart[methodName].append({
+                    'min': np.min(values),
+                    'max': np.max(values),
+                    'mean': np.mean(values),
+                    'workType': workType
+                })
+                # end of section
+
+                histogram = []
+                for _ in range(settings.binCount + 1):
+                    histogram.append([])
+
+                removedCount = 0 # Initialize removedCount
+                for result in results:
+                    if result[0] is None:
+                        result[0] = 0
+
+                    if result[0] < settings.xAxisMin or result[0] > settings.xAxisMax:
+                        if settings.xAxisOutOfRangeMode == 'discard':
+                            removedCount += 1
+                            continue
+                        elif settings.xAxisOutOfRangeMode == 'clamp':
+                            result[0] = max(settings.xAxisMin, min(settings.xAxisMax, result[0]))
+
+                    if settings.reverse:
+                        result[0] = (settings.xAxisMax + settings.xAxisMin) - result[0]
+
+                    binIndexX = int((result[0] - settings.xAxisMin) / deltaX)
+                    histogram[binIndexX].append(result[1])
+
+                allExpHisto.append(histogram)
+
+            allMethods[workType][methodName] = allExpHisto
+            print('Done')
+
+    for work in allMethods:
+        for i in range(4):
+            xValues = [allMethods[work]['xAxis'][i][0] + float(k)*allMethods[work]['xAxis'][i][2] for k in range(settings.binCount)]
+            print(xValues)
+            yAxisMax = 0
             chart = go.Figure()
-            chart.add_trace(go.Scatter(x=dataToPlot['xAxis'], y=dataToPlot["yAxis"], mode="lines"))# , mode="lines" stackgroup="main"
 
-            xAxisTitle = settings.xAxisTitle
+            for MName, data in allMethods[work].items():
+                if MName == 'xAxis':
+                    continue
+
+                histo = data[i]
+                yValues = [np.mean(bin) for bin in histo if len(bin) > 0]
+
+                if len(yValues) > 0 and np.max(yValues) > yAxisMax:
+                    yAxisMax = np.max(yValues)
+
+                chart.add_trace(go.Scatter(x=xValues, y=yValues, mode='lines', name=MName))
+
+            print(f'{yAxisMax = }')
+            yTick = yAxisMax//10 if yAxisMax > 0 else 1
+
+            xAxisTitle = 'WorkloadSIze'
             chart.update_coloraxes(showscale=False)
-            pio.defaults.default_width = 300
-            pio.defaults.default_height = 300
+            pio.kaleido.scope.default_width = 600
+            pio.kaleido.scope.default_height = 600
+
             if settings.xAxisTitleAdjustment > 0:
                 xAxisTitle += ' ' * settings.xAxisTitleAdjustment
-                xAxisTitle += 't'
+                xAxisTitle += ''
 
-            chart.update_layout(xaxis_title=xAxisTitle, yaxis_title="Execution Time",
-                                    margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
-                                    xaxis=dict(autorange=False, automargin=True, dtick=settings.xTick, range=[settings.xAxisMin, settings.xAxisMax]),
-                                    yaxis=dict(autorange=False, automargin=True, dtick=yTick, range=[yAxisMin, yAxisMax]))
-            #stackFigure.show()
+            chart.update_layout(xaxis_title=xAxisTitle, yaxis_title=f"throughput ({work}/s)",
+                                margin={'t': 15, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
+                                xaxis=dict(range=[xValues[0], xValues[-1]] if xValues else [0,1]),
+                                yaxis=dict(autorange=False, automargin=True, dtick=yTick, range=[0, yAxisMax]))
 
-            outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
-            pio.write_image(chart, outputFile, format='pdf', validate=True)
-
+            outputFile = os.path.join(output_directory, experimentName + "-experiment-" + str(i+1) + '-' + work + ".pdf")
+            pio.write_image(chart, outputFile, engine="kaleido", validate=True)
 
 
+    # Generating the bar chart
+    methods = [
+        'COPS',
+        'GEDI',
+        'MICCI-PointCloud',
+        'SHOT',
+        'SI',
+        'MICCI-Triangle',
+        'QUICCI',
+        'RICI'
+    ]
+    yAxisTitle = 'Points/Triangles processed per second'
+    yAxisCutoff = 120e6
+
+    method_categories = {
+        'GEDI': 'Python method',
+        'COPS': 'Python method',
+        'MICCI-PointCloud': 'Point based method',
+        'SHOT': 'Point based method',
+        'SI': 'Point based method',
+        'MICCI-Triangle': 'Triangle based method',
+        'QUICCI': 'Triangle based method',
+        'RICI': 'Triangle based method',
+    }
+
+    method_category_colors = {
+        'Python method': 'rgba(173, 216, 230, 0.5)',  # Light blue, 40% opaque
+        'Point based method': 'rgba(255, 223, 186, 0.5)',  # Light orange, 40% opaque
+        'Triangle based method': 'rgba(221, 160, 221, 0.5)'  # Plum, 40% opaque
+    }
 
 
+    for i in range(4):
+        showlegend = False if i < 2 else True
+
+        bar_traces = [
+            go.Bar(name='Minimum', x=methods, y=[barChart[methodName][i]['min'] for methodName in methods], showlegend=showlegend, legendgroup='metrics'),
+            go.Bar(name='Average', x=methods, y=[barChart[methodName][i]['mean'] for methodName in methods], showlegend=showlegend, legendgroup='metrics'),
+            go.Bar(name='Maximum', x=methods, y=[barChart[methodName][i]['max'] for methodName in methods], showlegend=showlegend, legendgroup='metrics'),
+        ]
+
+        dummy_legend_traces = []
+        category_order = ['Python method', 'Point based method', 'Triangle based method']
+        for category_name in category_order:
+            if category_name in method_category_colors:
+                bg_color = method_category_colors[category_name]
+                dummy_legend_traces.append(
+                    go.Scatter(
+                        x=[None],
+                        y=[None],
+                        mode='markers',
+                        marker=dict(size=10, color=bg_color, symbol='square'),
+                        name=category_name,
+                        showlegend=showlegend,
+                        hoverinfo='none',
+                        legendgroup='background_categories'
+                    )
+                )
+        
+        bar = go.Figure(data=bar_traces + dummy_legend_traces)
 
 
+        bar.update_coloraxes(showscale=False)
+
+        pio.kaleido.scope.default_width = 700 if i > 1 else 500
+        pio.kaleido.scope.default_height = 600
+
+        bar.update_layout(
+            barmode='group',
+            yaxis = dict(range=[0,yAxisCutoff], title_text=yAxisTitle),
+            margin={'t':100, 'l':0, 'b':45, 'r':15},
+            font=dict(size=18),
+            xaxis=dict(tickangle=-45, showgrid=False),
+        )
+
+        # Inserting annotations
+        annotations = []
+        xOffsetMap = {
+            'Minimum':-0.3,
+            'Maximum':0.0,
+            'Average':0.3
+        }
+        method_to_x_index = {method: i for i, method in enumerate(methods)}
+        annotation_angle = -45
+
+        metric_bar_colors = {
+            'Minimum': '#636EFA',
+            'Maximum': '#EF553B',
+            'Average': '#00CC96'
+        }
+
+        for trace in bar.data:
+            if trace.name in ['Minimum', 'Maximum', 'Average']:
+                for k, value in enumerate(trace.y):
+                    if value > yAxisCutoff:
+                        method_name = trace.x[k]
+                        xAnnotation = method_to_x_index[method_name] + xOffsetMap[trace.name]
+                        yAnnotation = yAxisCutoff * 0.99
+                        annotatedValueFormatted = f'{value/1_000_000:.0f}M'
+
+                        annotation_color = metric_bar_colors.get(trace.name, "black")
+
+                        annotations.append(
+                            go.layout.Annotation(
+                                x=xAnnotation,
+                                y=yAnnotation,
+                                text=f'<b>{annotatedValueFormatted}</b>',
+                                showarrow=True,
+                                arrowhead=1,
+                                arrowsize=1,
+                                arrowwidth=1,
+                                arrowcolor=annotation_color,
+                                ax=0,
+                                ay=-20,
+                                font=dict(color=annotation_color, size=10, family="Arial, sans-serif"),
+                                #bgcolor="rgba(255, 255, 255, 0.7)",
+                                #bordercolor="gray",
+                                #borderwidth=0.5,
+                                #borderpad=2,
+                                #opacity=0.9,
+                                textangle=annotation_angle
+                            )
+                        )
+
+        # Adding shapes
+        shapes = []
+        for k, method in enumerate(methods):
+            x0_coord = k - 0.5
+            x1_coord = k + 0.5
+            category = method_categories.get(method, 'Unknown category')
+            bg_color = method_category_colors.get(category, 'rgba(240, 240, 240, 0.4)') # Ensure 0.4 opacity here too
+
+            shapes.append(
+                go.layout.Shape(
+                    type="rect",
+                    xref="x",
+                    yref="paper",
+                    x0=x0_coord,
+                    y1=1,
+                    x1=x1_coord,
+                    y0=0,
+                    fillcolor=bg_color,
+                    layer="below",
+                    line_width=0,
+                )
+            )
+
+        bar.update_layout(annotations=annotations, shapes=shapes)
+        outputFile = os.path.join(output_directory, f"executionTime-exp-{i}.pdf")
+        pio.write_image(bar, outputFile, engine='kaleido', validate=True)
+
+
+    diag = go.Figure()
+    diag.add_trace(go.Bar(x=methods, y=[diagram[method] for method in methods]))
+    diag.update_coloraxes(showscale=False)
+    pio.kaleido.scope.default_width = 600
+    pio.kaleido.scope.default_height = 600
+    if settings.xAxisTitleAdjustment > 0:
+        xAxisTitle += ' ' * settings.xAxisTitleAdjustment
+        xAxisTitle += 't'
+
+    diag.update_layout(yaxis_title=f"Descriptor comparisons per seconds",
+                        margin={'t': 35, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),)
+    outputFile = os.path.join(output_directory, "Comparison" + ".pdf")
+    pio.write_image(diag, outputFile, engine="kaleido", validate=True)            
+                
+                
+                
+                
+                
                 
                 
                 
@@ -1231,24 +1854,21 @@ def main():
         print('Entering directory:', directoryToProcess)
         if directoryToProcess == 'charts':
             continue
-        elif directoryToProcess == 'support_radius_estimation':
-            createChart(args.results_directory, args.output_dir, 'support-radius')
-        elif directoryToProcess == 'execution_times':
-            continue
-            #executionTimeChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'execution-times')
         elif not os.path.isdir(os.path.join(args.results_directory, directoryToProcess)):
             continue
+        elif directoryToProcess == 'execution_times':
+            executionTimeChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, '')
+        elif directoryToProcess == 'support_radius_estimation':
+            createChart(args.results_directory, args.output_dir, 'support-radius')
+        elif directoryToProcess == 'experiment9-level3-ultimate-test':
+            createDDI3DChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'auto')
         else:
             #continue
-            overallTableEntry = None
             createChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'auto')
+
             #singleDDIChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'auto')
             #raise #CHECHPOINT
-            if overallTableEntry is None:
-                continue
             #print(overallTableEntry)
-            areasByMethod, chartName = overallTableEntry
-            overviewChartContents[chartName] = areasByMethod
 
     #print(overviewChartContents)
     '''overviewChartContents = {'Clutter': {'QUICCI': 0.27537532256709957, 'RICI': 0.4817495333351075, 'RoPS': 0.0009022093801893217, 'SHOT': 0.0010631403592512914, 'USC': 9.909914802135964e-06},
