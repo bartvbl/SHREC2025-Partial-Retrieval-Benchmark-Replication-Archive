@@ -1234,7 +1234,8 @@ def main():
         elif directoryToProcess == 'support_radius_estimation':
             createChart(args.results_directory, args.output_dir, 'support-radius')
         elif directoryToProcess == 'execution_times':
-            executionTimeChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'execution-times')
+            continue
+            #executionTimeChart(os.path.join(args.results_directory, directoryToProcess), args.output_dir, 'execution-times')
         elif not os.path.isdir(os.path.join(args.results_directory, directoryToProcess)):
             continue
         else:
