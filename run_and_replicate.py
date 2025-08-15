@@ -403,15 +403,21 @@ def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
     pass
 
 
+
+def replicateMICIDensityThreshold(config_file_to_edit):
+    run_command_line_command('./miccithresholdselector --configuration-file=../{}'.format(config_file_to_edit), 'bin')
+
+
 def runReplication(config_file_to_edit):
     while True:
         menu = TerminalMenu([
             "1. Change replication settings",
             "2. Replicate Figure 5 - Variation in execution times",
             "3. Replicate Figure 6 - Generate synthetic execution time meshes",
-            "4. Replicate Figure 9 to 20 - Benchmark results for experiments",
-            "5. Replicate Figure 21 and 22 - Execution times",
-            "6. back"
+            "4. Replicate MICI density threshold",
+            "5. Replicate Figure 9 to 20 - Benchmark results for experiments",
+            "6. Replicate Figure 21 and 22 - Execution times",
+            "7. back"
         ], title='---------------------- Replication Menu ----------------------')
 
         choice = menu.show() + 1
@@ -424,10 +430,12 @@ def runReplication(config_file_to_edit):
             case 3:
                 replicateSyntheticExecutionTimeMeshes(config_file_to_edit)
             case 4:
-                replicateExperimentsFigures(config_file_to_edit)
+                replicateMICIDensityThreshold(config_file_to_edit)
             case 5:
-                replicateExecutionTimes(config_file_to_edit)
+                replicateExperimentsFigures(config_file_to_edit)
             case 6:
+                replicateExecutionTimes(config_file_to_edit)
+            case 7:
                 return
 
 
