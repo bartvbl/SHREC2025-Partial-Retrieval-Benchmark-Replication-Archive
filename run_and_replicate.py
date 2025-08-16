@@ -23,9 +23,31 @@ os.makedirs(os.path.join(script_dir, 'input/objaverse-cache'), exist_ok=True)
 os.makedirs(os.path.join(script_dir, 'input/objaverse-uncompressed'), exist_ok=True)
 os.makedirs(os.path.join(script_dir, 'input/download'), exist_ok=True)
 
+python_environments = {
+    "GEDI": {
+        "directory": os.path.join(script_dir, 'env', 'conda-gedi'),
+        "activation": "env/conda-gedi/bin/activate",
+        "deactivation": "conda deactivate",
+        "binDir": "bin/conda-gedi"
+    },
+    "COPS": {
+        "directory": os.path.join(script_dir, 'env', 'python-cops'),
+        "activation": "env/python-cops/bin/activate",
+        "deactivation": "deactivate",
+        "binDir": "bin/python-cops"
+    }
+}
+
 def run_command_line_command(command, working_directory='.'):
     print('>> Executing command:', command)
     subprocess.run(command, shell=True, check=False, cwd=working_directory)
+
+def run_command_line_command_in_python_env(command, python_environment, working_directory='.'):
+    print('>> Executing command:', command)
+    global python_environments
+    environment_meta = python_environments[python_environment]
+    activateCommand = 'source ' + os.path.relpath(os.path.join(script_dir, environment_meta['activation']), working_directory)
+    subprocess.run('/bin/bash -ic \'' + activateCommand + ' && ' + command + ' && ' + environment_meta["deactivation"] + '\'', shell=True, check=False, cwd=working_directory)
 
 def ask_for_confirmation(message):
     confirmation_menu = TerminalMenu(["yes", "no"], title=message)
@@ -38,7 +60,8 @@ def downloadFile(fileURL, tempFile, extractInDirectory, name, unzipCommand = 'p7
         run_command_line_command('wget --output-document ' + tempFile + ' ' + fileURL, 'input/download/')
     print()
     os.makedirs(extractInDirectory, exist_ok=True)
-    run_command_line_command(unzipCommand.format(os.path.join(os.path.relpath('input/download', extractInDirectory), tempFile)), extractInDirectory)
+    if unzipCommand is not None:
+        run_command_line_command(unzipCommand.format(os.path.join(os.path.relpath('input/download', extractInDirectory), tempFile)), extractInDirectory)
     #if ask_for_confirmation('Download and extraction complete. Would you like to delete the compressed archive to save disk space?'):
     #    os.remove('input/download/' + tempFile)
     print()
@@ -48,6 +71,7 @@ def downloadDatasetsMenu():
         "Download all",
         "Download computed results (4.7GB download, 83.4GB uncompressed)",
         "Download cache files (4.0GB download, 4.4GB uncompressed)",
+        'Download prebuilt conda environment (2.2GB download, 5.7GB uncompressed)',
         "back"], title='------------------ Download Datasets ------------------')
 
     while True:
@@ -59,7 +83,9 @@ def downloadDatasetsMenu():
         if choice == 1 or choice == 3:
             downloadFile('https://ntnu.box.com/shared/static/p13szk6gx60zfi55qwmw4mkbifkx460p.7z', 'cache.7z',
                          'cache', 'Precomputed cache files')
-        if choice == 4:
+        if choice == 1 or choice == 4:
+            downloadFile('https://ntnu.box.com/shared/static/b1jr4pmp0z7sbmwkvy5zsvqys0qzyf4g.gz', 'shapebench-gedi.tar.gz', python_environments["GEDI"]["directory"], 'prebuilt conda environment', 'tar -v -xzf {} -C .')
+        if choice == 5:
             return
 
 def installDependencies():
@@ -67,27 +93,45 @@ def installDependencies():
         "Install APT dependencies",
         "Install Chromium (if you don't have Chrome available. Mandated by Kaleido, which generates charts)",
         "Install conda",
-        "Install pip dependencies",
+        "Install pip/conda dependencies",
         "back"], title='------------------ Install Dependencies ------------------')
 
     while True:
         choice = dependencies_menu.show() + 1
 
         if choice == 1:
-            run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev')
+            run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev python3-venv')
         if choice == 2:
             run_command_line_command('sudo apt install chromium')
         if choice == 3:
             run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
             run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
         if choice == 4:
-            run_command_line_command('pip3 install numpy matplotlib plotly wcwidth kaleido')
+            run_command_line_command_in_python_env('conda-unpack', 'GEDI')
+            if not os.path.exists('env/python-cops'):
+                run_command_line_command('python3 -m venv env/python-cops')
+            run_command_line_command_in_python_env('pip3 install numpy matplotlib plotly wcwidth kaleido', 'COPS')
+            print()
         if choice == 5:
             return
 
 def compileProject():
-    os.makedirs('bin', exist_ok=True)
+    global python_environments
+    if not os.path.exists(python_environments["GEDI"]["directory"]):
+        print()
+        print('ERROR: Compilation cannot proceed before the conda environment has been downloaded and installed.')
+        print('Use the download and install dependencies menus to do so.')
+        print()
+        return
+    if not os.path.exists(python_environments["COPS"]["directory"]):
+        print()
+        print('ERROR: Compilation cannot proceed before the python COPS environment has been installed.')
+        print('Use the install dependencies menu to do so.')
+        print()
+        return
+
     run_command_line_command('rm -rf bin/*')
+
 
     cudaCompiler = ''
     if which('nvcc') is None:
@@ -101,16 +145,23 @@ def compileProject():
                 nvccPath = '/usr/local/cuda/bin/nvcc'
             cudaCompiler = ' -DCMAKE_CUDA_COMPILER=' + nvccPath
 
-
-    run_command_line_command('cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja' + cudaCompiler, 'bin')
-    if not os.path.isfile('bin/build.ninja'):
-        print()
-        print('Failed to compile the project: CMake exited with an error.')
-        print()
-        return
     run_command_line_command('./configure', 'lib/gmp-6.3.0/')
     run_command_line_command('make -j', 'lib/gmp-6.3.0/')
-    run_command_line_command('ninja ', 'bin')
+
+
+    for environmentName in python_environments:
+        environment_meta = python_environments[environmentName]
+        binPath = os.path.join(script_dir, environment_meta['binDir'])
+        os.makedirs(binPath, exist_ok=True)
+        print('--------------- COMPILING PROJECT FOR ENVIRONMENT {} ----------------'.format(environmentName))
+        run_command_line_command_in_python_env('cmake ' + os.path.relpath(script_dir, binPath) + ' -DCMAKE_BUILD_TYPE=Release -G Ninja' + cudaCompiler, environmentName, binPath)
+        if not os.path.isfile(os.path.join(binPath, 'build.ninja')):
+            print()
+            print('Failed to compile the project: CMake exited with an error.')
+            print()
+            return
+
+        run_command_line_command_in_python_env('ninja ', environmentName, binPath)
 
     print()
     print('Complete.')
@@ -752,8 +803,8 @@ def runMainMenu(config_file_to_edit):
 
     while True:
         main_menu = TerminalMenu([
-            "1. Install dependencies",
-            "2. Download Author computed results and cache files",
+            "1. Download Author computed results and cache files",
+            "2. Install dependencies",
             "3. Compile project",
             runOption,
             "5. Exit"], title='---------------------- Main Menu ----------------------')
@@ -762,9 +813,9 @@ def runMainMenu(config_file_to_edit):
         
         match choice:
             case 1:
-                installDependencies()
-            case 2:
                 downloadDatasetsMenu()
+            case 2:
+                installDependencies()
             case 3:
                 compileProject()
             case 4:
@@ -836,4 +887,5 @@ def runIntroSequence():
     runMainMenu(run_configuration_file)
 
 if __name__ == "__main__":
+
     runIntroSequence()
