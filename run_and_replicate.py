@@ -389,10 +389,11 @@ def showExecutionTimesNotice():
     notice_menu.show()
 
 
-def runBenchmarkInExecutionTimeMode(config_file_to_edit, generateSampleMeshes = False):
+def runBenchmarkInExecutionTimeMode(config_file_to_edit, methodName, generateSampleMeshes = False):
     config = readConfigFile(config_file_to_edit)
-    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = True
-    config["executionTimeMeasurement"]["enabled"] = generateSampleMeshes
+    config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = generateSampleMeshes
+    config["executionTimeMeasurement"]["enabled"] = True
+    config["methodSettings"][methodName]["enabled"] = True
     writeConfigFile(config, config_file_to_edit)
 
     if generateSampleMeshes:
@@ -415,10 +416,19 @@ def runBenchmarkInExecutionTimeMode(config_file_to_edit, generateSampleMeshes = 
 
     config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = False
     config["executionTimeMeasurement"]["enabled"] = False
+    config["methodSettings"][methodName]["enabled"] = False
     writeConfigFile(config, config_file_to_edit)
 
 def replicateExecutionTimes(config_file_to_edit):
-    runBenchmarkInExecutionTimeMode(config_file_to_edit, False)
+    showExecutionTimesNotice()
+
+    methodMenu = TerminalMenu(['Replicate execution times for method {}'.format(x) for x in allMethods] + ["back"], title='------------------ Replicate Execution Times ------------------')
+    while True:
+        choice = methodMenu.show() + 1
+        if choice == len(allMethods) + 1:
+            return
+        methodName = allMethods[choice - 1]
+        runBenchmarkInExecutionTimeMode(config_file_to_edit, methodName, False)
 
 
 def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
@@ -460,20 +470,7 @@ def replicateExecutionTimeVariabilityCharts(config_file_to_edit):
 
 
 def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
-    showExecutionTimesNotice()
-
-    config = readConfigFile(config_file_to_edit)
-    config["methodSettings"]["SHOT"]["enabled"] = True
-    writeConfigFile(config, config_file_to_edit)
-
-    runBenchmarkInExecutionTimeMode(config_file_to_edit, True)
-
-    config = readConfigFile(config_file_to_edit)
-    config["methodSettings"]["SHOT"]["enabled"] = False
-    writeConfigFile(config, config_file_to_edit)
-
-
-
+    runBenchmarkInExecutionTimeMode(config_file_to_edit, "SHOT", True)
 
 
 def replicateMICIDensityThreshold(config_file_to_edit):
