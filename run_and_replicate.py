@@ -114,6 +114,10 @@ def installDependencies():
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
             run_command_line_command_in_python_env('pip3 install numpy matplotlib plotly wcwidth kaleido', 'COPS')
+            run_command_line_command_in_python_env('pip3 install torch_geometric', 'COPS')
+            run_command_line_command_in_python_env('pip3 install --extra-index-url https://miropsota.github.io/torch_packages_builder pytorch3d==0.7.8+pt2.6.0cu124', 'COPS')
+            run_command_line_command_in_python_env('pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124', 'COPS')
+            run_command_line_command_in_python_env('pip3 install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.6.0+cu124.html', 'COPS')
             print()
         if choice == 5:
             return
@@ -133,7 +137,7 @@ def compileProject():
         print()
         return
 
-    run_command_line_command('rm -rf bin/*')
+
 
 
     cudaCompiler = ''
@@ -153,8 +157,10 @@ def compileProject():
 
 
     for environmentName in python_environments:
+
         environment_meta = python_environments[environmentName]
         binPath = os.path.join(script_dir, environment_meta['binDir'])
+        run_command_line_command('rm -rf ' + binPath)
         os.makedirs(binPath, exist_ok=True)
         print('--------------- COMPILING PROJECT FOR ENVIRONMENT {} ----------------'.format(environmentName))
         run_command_line_command_in_python_env('cmake ' + os.path.relpath(script_dir, binPath) + ' -DCMAKE_BUILD_TYPE=Release -G Ninja' + cudaCompiler, environmentName, binPath)
