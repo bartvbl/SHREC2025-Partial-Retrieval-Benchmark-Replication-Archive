@@ -390,9 +390,6 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
             envName = methodName if methodName in python_environments else 'COPS'
 
             precomputedResultsDir = os.path.join('precomputed_results', trackExperiments[figureIndex][0])
-            print(precomputedResultsDir)
-            print(os.listdir(precomputedResultsDir))
-            print(methodName)
             resultFiles = [x for x in os.listdir(precomputedResultsDir) if methodName in x]
             if len(resultFiles) != 1:
                 raise Exception('There should be exactly one result file for each method in the precomputed results directory. Found {}.'.format(len(resultFiles)))
