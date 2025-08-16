@@ -28,24 +28,27 @@ python_environments = {
         "directory": os.path.join(script_dir, 'env', 'conda-gedi'),
         "activation": "env/conda-gedi/bin/activate",
         "deactivation": "conda deactivate",
-        "binDir": "bin/conda-gedi"
+        "binDir": "bin-conda-gedi"
     },
     "COPS": {
         "directory": os.path.join(script_dir, 'env', 'python-cops'),
         "activation": "env/python-cops/bin/activate",
         "deactivation": "deactivate",
-        "binDir": "bin/python-cops"
+        "binDir": "bin-python-cops"
     }
 }
+default_bin_dir = python_environments['COPS']['binDir']
 
 def run_command_line_command(command, working_directory='.'):
     print('>> Executing command:', command)
     subprocess.run(command, shell=True, check=False, cwd=working_directory)
 
-def run_command_line_command_in_python_env(command, python_environment, working_directory='.'):
+def run_command_line_command_in_python_env(command, python_environment, working_directory=None):
     print('>> Executing command:', command)
     global python_environments
     environment_meta = python_environments[python_environment]
+    if working_directory is None:
+        working_directory = environment_meta['binDir']
     activateCommand = 'source ' + os.path.relpath(os.path.join(script_dir, environment_meta['activation']), working_directory)
     subprocess.run('/bin/bash -ic \'' + activateCommand + ' && ' + command + ' && ' + environment_meta["deactivation"] + '\'', shell=True, check=False, cwd=working_directory)
 
@@ -340,7 +343,7 @@ def generateRadiusReplicationSettingsString(config):
     else:
         return 'nothing is replicated'
 
-allMethods = ['QUICCI', 'RICI', 'SHOT', 'COPS', 'GeDI', 'SI', 'MICCI-Triangle', 'MICCI-PointCloud']
+allMethods = ['QUICCI', 'RICI', 'SHOT', 'COPS', 'GEDI', 'SI', 'MICCI-Triangle', 'MICCI-PointCloud']
 trackExperiments = [
     ('experiment1-level1-occlusion-only',                'Experiment 1: Single occlusion filter'),
     ('experiment2-level1-clutter-only',                  'Experiment 2: Single clutter filter'),
@@ -361,6 +364,7 @@ def runCharter():
     print()
 
 def replicateExperimentResults(figureIndex, config_file_to_edit):
+    global python_environments
     config = readConfigFile(config_file_to_edit)
     while True:
         print()
@@ -383,7 +387,12 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
         if choice > 1 and choice < len(allMethods) + 2:
             methodIndex = choice - 2
             methodName = allMethods[methodIndex]
+            envName = methodName if methodName in python_environments else 'COPS'
+
             precomputedResultsDir = os.path.join('precomputed_results', trackExperiments[figureIndex][0])
+            print(precomputedResultsDir)
+            print(os.listdir(precomputedResultsDir))
+            print(methodName)
             resultFiles = [x for x in os.listdir(precomputedResultsDir) if methodName in x]
             if len(resultFiles) != 1:
                 raise Exception('There should be exactly one result file for each method in the precomputed results directory. Found {}.'.format(len(resultFiles)))
@@ -392,7 +401,7 @@ def replicateExperimentResults(figureIndex, config_file_to_edit):
             print()
             enableVisualisations = config['filterSettings']['additiveNoise']['enableDebugCamera']
             commandPreamble = 'xvfb-run ' if not enableVisualisations else ''
-            run_command_line_command(commandPreamble + './shapebench --replicate-results-file=../{} --configuration-file=../{}'.format(fileToReplicate, config_file_to_edit), 'bin')
+            run_command_line_command_in_python_env(commandPreamble + './shapebench --replicate-results-file=../{} --configuration-file=../{}'.format(fileToReplicate, config_file_to_edit), envName)
             print(commandPreamble + './shapebench --replicate-results-file=../{} --configuration-file=../{}'.format(fileToReplicate, config_file_to_edit))
             print()
             print('Complete.')
@@ -441,18 +450,20 @@ def showExecutionTimesNotice():
 
 
 def runBenchmarkInExecutionTimeMode(config_file_to_edit, methodName, generateSampleMeshes = False):
+    global python_environments
     config = readConfigFile(config_file_to_edit)
     config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"]["generateSampleMeshes"] = generateSampleMeshes
     config["executionTimeMeasurement"]["enabled"] = True
     config["methodSettings"][methodName]["enabled"] = True
     writeConfigFile(config, config_file_to_edit)
+    envName = methodName if methodName in python_environments else 'COPS'
 
     if generateSampleMeshes:
         print()
         print("Generating sample synthetic execution time meshes..")
         destinationDirectory = config["executionTimeMeasurement"]["syntheticExperimentsSharedSettings"][
             "generatedMeshDirectory"]
-        absoluteDestinationDirectory = os.path.abspath(os.path.join('bin', destinationDirectory))
+        absoluteDestinationDirectory = os.path.abspath(os.path.join(python_environments[envName]['binDir'], destinationDirectory))
         os.makedirs(absoluteDestinationDirectory, exist_ok=True)
         print("You can find the generated meshes here:", absoluteDestinationDirectory)
         print()
@@ -461,7 +472,8 @@ def runBenchmarkInExecutionTimeMode(config_file_to_edit, methodName, generateSam
     enableVisualisations = config['filterSettings']['additiveNoise']['enableDebugCamera']
     commandPreamble = 'xvfb-run ' if not enableVisualisations else ''
     commandToRun = 'taskset --cpu-list 3 ' + commandPreamble + './shapebench --configuration-file=../{}'.format(config_file_to_edit)
-    run_command_line_command(commandToRun, 'bin')
+    envName = methodName if methodName in python_environments else 'COPS'
+    run_command_line_command_in_python_env(commandToRun, envName)
     print()
     print('Complete.')
 
@@ -525,7 +537,8 @@ def replicateSyntheticExecutionTimeMeshes(config_file_to_edit):
 
 
 def replicateMICIDensityThreshold(config_file_to_edit):
-    run_command_line_command('./miccithresholdselector --configuration-file=../{}'.format(config_file_to_edit), 'bin')
+    global default_bin_dir
+    run_command_line_command('./miccithresholdselector --configuration-file=../{}'.format(config_file_to_edit), default_bin_dir)
 
     config = readConfigFile(config_file_to_edit)
 
@@ -785,7 +798,7 @@ def runExperiments(config_file_to_edit):
 
                 print('Now running...')
                 run_command_line_command(
-                    commandPreamble + './shapebench --configuration-file=../{}'.format(config_file_to_edit), 'bin')
+                    commandPreamble + './shapebench --configuration-file=../{}'.format(config_file_to_edit), default_bin_dir)
 
             case 2:
                 changeReplicationSettings()  # DONE
