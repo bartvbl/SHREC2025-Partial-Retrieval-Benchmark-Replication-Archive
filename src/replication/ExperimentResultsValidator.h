@@ -154,7 +154,7 @@ namespace ShapeBench {
                 occlusionStats.registerValue(partiality, replicatedResult.modelObject.fractionSurfacePartiality);
                 reportFile << partiality << ", " << replicatedResult.modelObject.fractionSurfacePartiality << ", " << (partiality == replicatedResult.modelObject.fractionSurfacePartiality ? "yes" : "no") << ", ";
             } else {
-                reportFile << ",,,";
+                reportFile << ",,,,,,";
             }
 
             // Scene
@@ -166,7 +166,7 @@ namespace ShapeBench {
                 occlusionStats.registerValue(partiality, replicatedResult.sceneObject.fractionSurfacePartiality);
                 reportFile << partiality << ", " << replicatedResult.sceneObject.fractionSurfacePartiality << ", " << (partiality == replicatedResult.sceneObject.fractionSurfacePartiality ? "yes" : "no") << ", ";
             } else {
-                reportFile << ",,,";
+                reportFile << ",,,,,,";
             }
             // Matching result
             descriptorRankStats.registerValue(originalResult["filteredDescriptorRank"], replicatedResult.filteredDescriptorRank);
