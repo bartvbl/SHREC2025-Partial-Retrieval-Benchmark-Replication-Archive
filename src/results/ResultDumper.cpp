@@ -21,7 +21,7 @@ nlohmann::json getGPUInfo() {
         return deviceInfo;
     }
     deviceInfo["gpuName"] = std::string(device_information.name);
-    deviceInfo["gpuClock"] = device_information.clockRate;
+    //deviceInfo["gpuClock"] = device_information.clockRate;
     deviceInfo["gpuVRAM"] = device_information.totalGlobalMem / (1024 * 1024);
     return deviceInfo;
 }

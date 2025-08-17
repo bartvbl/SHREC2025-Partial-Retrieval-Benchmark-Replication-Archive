@@ -143,7 +143,7 @@ add_executable(shapebench ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${LIBRARY_SOURCE
 target_link_libraries(shapebench PUBLIC ShapeDescriptor OpenMP::OpenMP_CXX Jolt glfw gitinfo ceres CURL::libcurl GMP_Interface fmt::fmt pybind11::embed) # lsan ${PCL_LIBRARIES} ${SDL2_LIBRARIES}
 target_compile_options(shapebench PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -Xcompiler=-fopenmp -diag-suppress 20012>) #-Xcompiler=-fsanitize=leak
 target_compile_options(shapebench PRIVATE -frounding-math)
-set_property(TARGET shapebench PROPERTY CUDA_ARCHITECTURES 52 60 61 70 75 80 90)
+set_property(TARGET shapebench PROPERTY CUDA_ARCHITECTURES 75 80 90)
 #target_compile_definitions(shapebench PRIVATE ${PCL_DEFINITIONS})
 
 # Needed because Jolt drops a bunch of architecture specific compiler flags that NVCC doesn't understand
@@ -152,14 +152,14 @@ target_compile_options(shapebench PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -forward-u
 #target_compile_options(shapebench PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-mavx2,-mbmi,-mpopcnt,-mlzcnt,-mf16c,-DJPH_ENABLE_ASSERTS>) # -fsanitize=leak
 
 add_executable(armadillo tools/similarityrenderer/main.cpp)
-target_link_libraries(armadillo PUBLIC ShapeDescriptor)
-set_property(TARGET armadillo PROPERTY CUDA_ARCHITECTURES 52 60 61 70 75 80 90)
+1target_link_libraries(armadillo PUBLIC ShapeDescriptor)
+set_property(TARGET armadillo PROPERTY CUDA_ARCHITECTURES 75 80 90)
 
 add_library(shapebenchstatic ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${LIBRARY_SOURCES})
 target_link_libraries(shapebenchstatic PUBLIC ShapeDescriptor OpenMP::OpenMP_CXX Jolt glfw gitinfo ceres CURL::libcurl GMP_Interface fmt::fmt pybind11::embed) # lsan ${PCL_LIBRARIES} ${SDL2_LIBRARIES}
 target_compile_options(shapebenchstatic PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -Xcompiler=-fopenmp -diag-suppress 20012>) #-Xcompiler=-fsanitize=leak
 target_compile_options(shapebenchstatic PRIVATE -frounding-math -march=native)
-set_property(TARGET shapebenchstatic PROPERTY CUDA_ARCHITECTURES 52 60 61 70 75 80 90)
+set_property(TARGET shapebenchstatic PROPERTY CUDA_ARCHITECTURES 75 80 90)
 target_compile_options(shapebenchstatic PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -forward-unknown-to-host-compiler -diag-suppress 20012> -std=c++20)
 
 if(SB_BUILD_TESTS)
@@ -170,9 +170,9 @@ endif()
 add_executable(miccithresholdselector tools/micciThresholdSelector/main.cu
                                       tools/micciThresholdSelector/densityThresholdEstimator.cpp)
 target_link_libraries(miccithresholdselector PUBLIC ShapeDescriptor shapebenchstatic)
-set_property(TARGET miccithresholdselector PROPERTY CUDA_ARCHITECTURES 52 60 61 70 75 80 90)
+set_property(TARGET miccithresholdselector PROPERTY CUDA_ARCHITECTURES 75 80 90)
 target_compile_options(miccithresholdselector PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -Xcompiler=-fopenmp -diag-suppress 20012>)
 
 add_executable(executiontimevariation tools/executionTimeVariation/main.cpp)
 target_link_libraries(executiontimevariation PUBLIC ShapeDescriptor shapebenchstatic)
-set_property(TARGET executiontimevariation PROPERTY CUDA_ARCHITECTURES 52 60 61 70 75 80 90)
+set_property(TARGET executiontimevariation PROPERTY CUDA_ARCHITECTURES 75 80 90)

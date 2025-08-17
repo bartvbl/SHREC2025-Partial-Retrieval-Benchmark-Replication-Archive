@@ -27,7 +27,7 @@ python_environments = {
     "GEDI": {
         "directory": os.path.join(script_dir, 'env', 'conda-gedi'),
         "activation": "env/conda-gedi/bin/activate",
-        "deactivation": "conda deactivate",
+        "deactivation": "source deactivate",
         "binDir": "bin-conda-gedi"
     },
     "COPS": {
@@ -50,7 +50,9 @@ def run_command_line_command_in_python_env(command, python_environment, working_
     if working_directory is None:
         working_directory = environment_meta['binDir']
     activateCommand = 'source ' + os.path.relpath(os.path.join(script_dir, environment_meta['activation']), working_directory)
-    subprocess.run('/bin/bash -ic \'' + activateCommand + ' && ' + command + ' && ' + environment_meta["deactivation"] + '\'', shell=True, check=False, cwd=working_directory)
+    env_command = '/bin/bash -ic \'' + activateCommand + ' && ' + command + ' && ' + environment_meta["deactivation"] + '\''
+    print(' -> Wrapped environment command:', env_command)
+    subprocess.run(env_command, shell=True, check=False, cwd=working_directory)
 
 def ask_for_confirmation(message):
     confirmation_menu = TerminalMenu(["yes", "no"], title=message)
@@ -104,7 +106,7 @@ def installDependencies():
         choice = dependencies_menu.show() + 1
 
         if choice == 1:
-            run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev python3-venv')
+            run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev python3-venv libglfw3-dev')
         if choice == 2:
             print()
             print('----------------------------------------------')
@@ -117,7 +119,8 @@ def installDependencies():
             run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
             run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
         if choice == 5:
-            run_command_line_command_in_python_env('conda-unpack', 'GEDI', os.path.join(python_environments["GEDI"]["directory"], 'bin'))
+            run_command_line_command('python3 bin/conda-unpack', python_environments["GEDI"]["directory"])
+            run_command_line_command('chmod +x bin/deactivate', python_environments["GEDI"]["directory"])
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
             COPSBinDir = python_environments["GEDI"]["directory"]
@@ -178,7 +181,7 @@ def compileProject():
             print()
             return
 
-        run_command_line_command_in_python_env('ninja ', environmentName, binPath)
+        run_command_line_command_in_python_env('ninja', environmentName, binPath)
 
     print()
     print('Complete.')
