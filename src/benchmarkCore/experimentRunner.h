@@ -517,10 +517,7 @@ void testMethod(const ShapeBench::BenchmarkConfiguration& setup, ShapeBench::Loc
 
         if(setup.replicationSettings.enabled) {
             ShapeBench::checkReplicatedExperimentResults(configuration, DescriptorMethod::getName(), experimentName,experimentResult, setup.replicationSettings.experimentResults);
-        }
-
-
-        if(!setup.replicationSettings.enabled) {
+        } else {
             std::cout << "Writing caches.." << std::endl;
             for(ShapeBench::Filter* filter : activeFiltersForThisExperiment) {
                 filter->saveCaches(configuration);
@@ -535,7 +532,9 @@ void testMethod(const ShapeBench::BenchmarkConfiguration& setup, ShapeBench::Loc
 
     std::cout << "Measuring execution time.." << std::endl;
 
-    if(configuration.contains("executionTimeMeasurement") && configuration.at("executionTimeMeasurement").at("enabled")) {
+    if(setup.replicationSettings.enabled) {
+        std::cout << "    Disabled during replication mode" << std::endl;
+    } else if(configuration.contains("executionTimeMeasurement") && configuration.at("executionTimeMeasurement").at("enabled")) {
         ShapeBench::computeDescriptorMethodExecutionTime<DescriptorMethod, DescriptorType>(configuration, dataset, fileCache, executionTimeRandomSeed, supportRadius, referenceDescriptors);
     } else {
         std::cout << "    Disabled. Skipping." << std::endl;
