@@ -123,7 +123,7 @@ def installDependencies():
             run_command_line_command('chmod +x bin/deactivate', python_environments["GEDI"]["directory"])
             # Conda is being a pain
             run_command_line_command('cp include/crypt.h include/python3.8/crypt.h', python_environments["GEDI"]["directory"])
-            run_command_line_command('pip install pointnet2_ops_lib/', os.path.join(script_dir, 'scripts', 'pythonmethods', 'GEDI', 'backbones'))
+            #run_command_line_command_in_python_env('pip install pointnet2_ops_lib/', 'GEDI', os.path.join(script_dir, 'scripts', 'pythonmethods', 'GEDI', 'backbones'))
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
             COPSBinDir = python_environments["GEDI"]["directory"]
