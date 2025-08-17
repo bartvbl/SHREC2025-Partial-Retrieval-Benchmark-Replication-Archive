@@ -502,10 +502,13 @@ def runBenchmarkInExecutionTimeMode(config_file_to_edit, methodName, generateSam
 def replicateExecutionTimes(config_file_to_edit):
     showExecutionTimesNotice()
 
-    methodMenu = TerminalMenu(['Replicate execution times for method {}'.format(x) for x in allMethods] + ["back"], title='------------------ Replicate Execution Times ------------------')
+    methodMenu = TerminalMenu(['Replicate execution times for method {}'.format(x) for x in allMethods] + ['Run charter script (same as the figures for the main experiment)', "back"], title='------------------ Replicate Execution Times ------------------')
     while True:
         choice = methodMenu.show() + 1
         if choice == len(allMethods) + 1:
+            runCharter()
+            continue
+        if choice == len(allMethods) + 2:
             return
         methodName = allMethods[choice - 1]
         runBenchmarkInExecutionTimeMode(config_file_to_edit, methodName, False)
