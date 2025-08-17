@@ -105,7 +105,7 @@ namespace ShapeBench {
                         filterPropertyNames.push_back("Filter Specific Property (model) \"" + key + "\"");
                     }
                     double referenceValue = 0.0;
-                    if (!originalResultFilterOutputIterator->is_null()) {
+                    if (!originalResultFilterOutputIterator->is_null() && !originalResultFilterOutputIterator->is_array()) {
                         referenceValue = originalResultFilterOutputIterator.value();
                     }
                     double computedValue = 0.0;
@@ -129,7 +129,7 @@ namespace ShapeBench {
                         filterPropertyNames.push_back("Filter Specific Property (scene) \"" + key + "\"");
                     }
                     double referenceValue = 0.0;
-                    if (!originalResultFilterOutputIterator->is_null()) {
+                    if (!originalResultFilterOutputIterator->is_null() && !originalResultFilterOutputIterator->is_array()) {
                         referenceValue = originalResultFilterOutputIterator.value();
                     }
                     double computedValue = 0.0;
