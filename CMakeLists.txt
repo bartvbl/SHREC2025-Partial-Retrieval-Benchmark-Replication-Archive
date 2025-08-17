@@ -152,7 +152,7 @@ target_compile_options(shapebench PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -forward-u
 #target_compile_options(shapebench PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-mavx2,-mbmi,-mpopcnt,-mlzcnt,-mf16c,-DJPH_ENABLE_ASSERTS>) # -fsanitize=leak
 
 add_executable(armadillo tools/similarityrenderer/main.cpp)
-1target_link_libraries(armadillo PUBLIC ShapeDescriptor)
+target_link_libraries(armadillo PUBLIC ShapeDescriptor)
 set_property(TARGET armadillo PROPERTY CUDA_ARCHITECTURES 75 80 90)
 
 add_library(shapebenchstatic ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${LIBRARY_SOURCES})
