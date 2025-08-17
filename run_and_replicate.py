@@ -94,6 +94,7 @@ def downloadDatasetsMenu():
 def installDependencies():
     dependencies_menu = TerminalMenu([
         "Install APT dependencies",
+        "Install CUDA",
         "Install Chromium (if you don't have Chrome available. Mandated by Kaleido, which generates charts)",
         "Install conda",
         "Install pip/conda dependencies",
@@ -105,11 +106,14 @@ def installDependencies():
         if choice == 1:
             run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev python3-venv')
         if choice == 2:
-            run_command_line_command('sudo apt install chromium')
+            print('To install CUDA, please go here:')
+            print('https://developer.nvidia.com/cuda-downloads')
         if choice == 3:
+            run_command_line_command('sudo apt install chromium')
+        if choice == 4:
             run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
             run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
-        if choice == 4:
+        if choice == 5:
             run_command_line_command_in_python_env('conda-unpack', 'GEDI')
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
@@ -119,7 +123,7 @@ def installDependencies():
             run_command_line_command_in_python_env('pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124', 'COPS')
             run_command_line_command_in_python_env('pip3 install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.6.0+cu124.html', 'COPS')
             print()
-        if choice == 5:
+        if choice == 6:
             return
 
 def compileProject():
