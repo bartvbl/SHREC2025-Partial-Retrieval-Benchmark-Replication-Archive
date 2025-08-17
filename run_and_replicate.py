@@ -117,14 +117,15 @@ def installDependencies():
             run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
             run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
         if choice == 5:
-            run_command_line_command('conda-unpack', os.path.join(python_environments["GEDI"]["directory"], 'bin'))
+            run_command_line_command_in_python_env('conda-unpack', 'GEDI', os.path.join(python_environments["GEDI"]["directory"], 'bin'))
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
-            run_command_line_command_in_python_env('pip3 install numpy matplotlib plotly wcwidth kaleido', 'COPS')
-            run_command_line_command_in_python_env('pip3 install torch_geometric', 'COPS')
-            run_command_line_command_in_python_env('pip3 install --extra-index-url https://miropsota.github.io/torch_packages_builder pytorch3d==0.7.8+pt2.6.0cu124', 'COPS')
-            run_command_line_command_in_python_env('pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124', 'COPS')
-            run_command_line_command_in_python_env('pip3 install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.6.0+cu124.html', 'COPS')
+            COPSBinDir = python_environments["GEDI"]["directory"]
+            run_command_line_command_in_python_env('pip3 install numpy matplotlib plotly wcwidth kaleido', 'COPS', COPSBinDir)
+            run_command_line_command_in_python_env('pip3 install torch_geometric', 'COPS', COPSBinDir)
+            run_command_line_command_in_python_env('pip3 install --extra-index-url https://miropsota.github.io/torch_packages_builder pytorch3d==0.7.8+pt2.6.0cu124', 'COPS', COPSBinDir)
+            run_command_line_command_in_python_env('pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124', 'COPS', COPSBinDir)
+            run_command_line_command_in_python_env('pip3 install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.6.0+cu124.html', 'COPS', COPSBinDir)
             print()
         if choice == 6:
             return
