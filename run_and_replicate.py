@@ -117,7 +117,7 @@ def installDependencies():
             run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
             run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
         if choice == 5:
-            run_command_line_command('conda-unpack', python_environments["GEDI"]["directory"])
+            run_command_line_command('conda-unpack', os.path.join(python_environments["GEDI"]["directory"], 'bin'))
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
             run_command_line_command_in_python_env('pip3 install numpy matplotlib plotly wcwidth kaleido', 'COPS')
