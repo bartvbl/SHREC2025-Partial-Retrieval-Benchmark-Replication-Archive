@@ -214,6 +214,8 @@ namespace ShapeBench {
                 std::cout << "    Comparing computed descriptors against those in the cache.." << std::endl;
                 uint32_t inconsistentDescriptorCount = 0;
                 uint32_t replicatedDescriptorCount = 0;
+                size_t totalByteCount = 0;
+                size_t totalMismatchedByteCount = 0;
 
                 for(uint32_t descriptorIndex = 0; descriptorIndex < representativeSet.size(); descriptorIndex++) {
                     if(!subset.contains(descriptorIndex)) {
@@ -224,11 +226,14 @@ namespace ShapeBench {
                     uint8_t* descriptorA = reinterpret_cast<uint8_t*>(&replicatedDescriptors.at(descriptorIndex).descriptor);
                     uint8_t* descriptorB = reinterpret_cast<uint8_t*>(&referenceDescriptors.at(descriptorIndex).descriptor);
                     for(uint32_t byteIndex = 0; byteIndex < sizeof(DescriptorType); byteIndex++) {
+                        totalByteCount++;
                         if(descriptorA[byteIndex] != descriptorB[byteIndex]) {
                             incorrectByteCount++;
+                            totalMismatchedByteCount++;
                             //throw std::logic_error("FATAL: Descriptors at index " + std::to_string(descriptorIndex) + " failed to replicate at byte " + std::to_string(byteIndex) + "!");
                         }
                     }
+
                     if(incorrectByteCount > 0) {
                         inconsistentDescriptorCount++;
                     }
@@ -237,6 +242,7 @@ namespace ShapeBench {
                 std::cout << "    Comparison complete. Number of identical descriptors: " << (replicatedDescriptorCount - inconsistentDescriptorCount) << " / " << replicatedDescriptorCount << std::endl;
                 if(inconsistentDescriptorCount > 0) {
                     std::cout << "    Some inconsistent descriptors were detected. This can happen due to rounding errors, so it's not necessarily a problem." << std::endl;
+                    std::cout << "    Mismatched byte count: " << totalMismatchedByteCount << "/" << totalByteCount << std::endl;
                     std::cout << "    Would you like to continue anyway? yes/no: ";
                     std::string answer;
                     std::cin >> answer;
