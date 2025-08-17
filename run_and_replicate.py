@@ -50,7 +50,7 @@ def run_command_line_command_in_python_env(command, python_environment, working_
     if working_directory is None:
         working_directory = environment_meta['binDir']
     activateCommand = 'source ' + os.path.relpath(os.path.join(script_dir, environment_meta['activation']), working_directory)
-    env_command = '/bin/bash -ic \'' + activateCommand + ' && ' + command + ' && ' + environment_meta["deactivation"] + '\''
+    env_command = '/bin/bash -ic \'' + activateCommand + ' && export CUBLAS_WORKSPACE_CONFIG=:4096:8 && ' + command + ' && ' + environment_meta["deactivation"] + '\''
     print(' -> Wrapped environment command:', env_command)
     subprocess.run(env_command, shell=True, check=False, cwd=working_directory)
 
