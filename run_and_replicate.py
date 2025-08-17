@@ -106,15 +106,18 @@ def installDependencies():
         if choice == 1:
             run_command_line_command('sudo apt install ninja-build cmake g++ git libwayland-dev libxkbcommon-x11-dev xorg-dev libssl-dev m4 texinfo libboost-dev libeigen3-dev wget xvfb python3-tk python3-pip libstdc++-12-dev libomp-dev python3-venv')
         if choice == 2:
+            print()
+            print('----------------------------------------------')
             print('To install CUDA, please go here:')
             print('https://developer.nvidia.com/cuda-downloads')
+            print()
         if choice == 3:
             run_command_line_command('sudo apt install chromium')
         if choice == 4:
             run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
             run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
         if choice == 5:
-            run_command_line_command_in_python_env('conda-unpack', 'GEDI')
+            run_command_line_command('conda-unpack', python_environments["GEDI"]["directory"])
             if not os.path.exists('env/python-cops'):
                 run_command_line_command('python3 -m venv env/python-cops')
             run_command_line_command_in_python_env('pip3 install numpy matplotlib plotly wcwidth kaleido', 'COPS')
