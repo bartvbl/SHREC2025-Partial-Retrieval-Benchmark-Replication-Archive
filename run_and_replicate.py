@@ -96,7 +96,7 @@ def downloadDatasetsMenu():
 def installDependencies():
     dependencies_menu = TerminalMenu([
         "Install APT dependencies",
-        "Install CUDA",
+        "Install CUDA (note: should not be higher than version 12)",
         "Install Chromium (if you don't have Chrome available. Mandated by Kaleido, which generates charts)",
         "Install conda",
         "Install pip/conda dependencies",
