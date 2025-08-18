@@ -150,10 +150,22 @@ def compileProject():
         print()
         return
 
-
-
+    multithread_menu = TerminalMenu(['Compile using all available threads', 'Limit number of threads (use this if the above option runs out of memory)', 'back']
+                                    , title='------------------ Install Dependencies ------------------')
+    thread_limit = None
+    while True:
+        choice = multithread_menu.show() + 1
+        if choice == 1:
+            thread_limit = None
+            break
+        elif choice == 2:
+            thread_limit = int(input('Number of threads to use: '))
+            break
+        elif choice == 3:
+            return
 
     cudaCompiler = ''
+    thread_limit_string = ' -j ' + str(thread_limit) if thread_limit is not None else ''
     if which('nvcc') is None:
         print()
         print('It appears that the CUDA NVCC compiler is not on your path.')
@@ -166,7 +178,7 @@ def compileProject():
             cudaCompiler = ' -DCMAKE_CUDA_COMPILER=' + nvccPath
 
     run_command_line_command('./configure', 'lib/gmp-6.3.0/')
-    run_command_line_command('make -j', 'lib/gmp-6.3.0/')
+    run_command_line_command('make -j' if thread_limit is None else 'make' + thread_limit_string, 'lib/gmp-6.3.0/')
 
 
     for environmentName in python_environments:
@@ -183,7 +195,7 @@ def compileProject():
             print()
             return
 
-        run_command_line_command_in_python_env('ninja', environmentName, binPath)
+        run_command_line_command_in_python_env('ninja' + thread_limit_string, environmentName, binPath)
 
     print()
     print('Complete.')
