@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import plotly.io as pio
 from plotly.subplots import make_subplots
 
-pio.kaleido.scope.mathjax = None
+pio.defaults.mathjax = None
 
 
 class ExperimentSettings:
@@ -631,8 +631,8 @@ def generateSupportRadiusChart(results_directory, output_directory):
             else:
                 countsFigure.update_layout(showlegend=False)
 
-            pio.kaleido.scope.default_width = chartWidth
-            pio.kaleido.scope.default_height = 300
+            pio.defaults.default_width = chartWidth
+            pio.defaults.default_height = 300
 
             countsFigure.add_trace(go.Scatter(x=xValues, y=yValues_Sequence1, mode='lines', name="Min"))
             countsFigure.add_trace(go.Scatter(x=xValues, y=yValues_Sequence2, mode='lines', name="Mean"))
@@ -714,14 +714,14 @@ def create2DChart(rawResults, configuration, settings, output_directory, jsonFil
     if jsonFilePath is not jsonFilePaths[-1]:
         stackFigure.update_coloraxes(showscale=False)
         stackFigure.update_traces(showscale=False)
-        pio.kaleido.scope.default_width = 300
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 300
+        pio.defaults.default_height = 300
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
             xAxisTitle += 't'
     else:
-        pio.kaleido.scope.default_width = 368
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 368
+        pio.defaults.default_height = 300
 
     stackFigure.update_layout(xaxis_title=xAxisTitle, yaxis_title=settings.yAxisTitle,
                               margin={'t': 0, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),
@@ -832,11 +832,11 @@ def createChart(results_directory, output_directory, mode):
                     xAxisTitle += 't'
                 stackFigure.update_layout(showlegend=False)
                 titleX = 0.5
-                pio.kaleido.scope.default_width = 300
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 300
+                pio.defaults.default_height = 300
             else:
-                pio.kaleido.scope.default_width = 475
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 475
+                pio.defaults.default_height = 300
                 titleX = (float(200) / float(500)) * 0.5
 
             stackFigure.update_yaxes(range=[0, 1])
@@ -866,11 +866,11 @@ def createChart(results_directory, output_directory, mode):
                     xAxisTitle += 't'
                 DDIChart.update_layout(showlegend=False)
                 titleX = 0.5
-                pio.kaleido.scope.default_width = 300
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 300
+                pio.defaults.default_height = 300
             else:
-                pio.kaleido.scope.default_width = 475
-                pio.kaleido.scope.default_height = 300
+                pio.defaults.default_width = 475
+                pio.defaults.default_height = 300
                 titleX = (float(200) / float(500)) * 0.5
             
             DDIChart.update_yaxes(range=[0, 1])
@@ -912,8 +912,8 @@ def createChart(results_directory, output_directory, mode):
         #countsFigure.update_layout(
         #    legend=dict(y=0, orientation="h", yanchor="bottom", yref="container", xref="paper", xanchor="left"))
         outputFile = os.path.join(output_directory, lastSettings.experimentName + "-counts.pdf")
-        pio.kaleido.scope.default_width = 435
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 435
+        pio.defaults.default_height = 300
         pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
         return (chartAreas, settings.chartShortName)
 
@@ -939,8 +939,8 @@ def writeOverviewChart(contents, outputFile):
                               categoryarray=['Clutter', 'Occlusion', 'Alternate<br>triangulation', 'Deviating<br>normal vector', 'Deviating<br>support radius', 'Gaussian<br>noise', 'Alternate<br>mesh resolution'])
     countsFigure.update_yaxes(range=[0, 1], dtick=0.1)
     countsFigure.update_layout(margin={'t': 0, 'l': 0, 'b': 0, 'r': 0}, font=dict(size=18), yaxis_title='Normalised DDI AUC')
-    pio.kaleido.scope.default_width = 1400
-    pio.kaleido.scope.default_height = 300
+    pio.defaults.default_width = 1400
+    pio.defaults.default_height = 300
     pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
 
 #DDI Charts for multiple filters and not 
@@ -1013,14 +1013,14 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     if jsonFilePath is not jsonFilePaths[-1]:
         stackFigure.update_coloraxes(showscale=False)
         stackFigure.update_traces(showlegend=False)
-        pio.kaleido.scope.default_width = 300
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 300
+        pio.defaults.default_height = 300
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
             xAxisTitle += 't'
     else:
-        pio.kaleido.scope.default_width = 500
-        pio.kaleido.scope.default_height = 300
+        pio.defaults.default_width = 500
+        pio.defaults.default_height = 300
     
     if settings.xAxisTitleAdjustment > 0:
         xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1204,8 +1204,8 @@ def createDDI3DChart_old(results_directory, output_directory, mode):
                 barChart.add_trace(go.Bar(name=name, x=methods, y=[allAreas[methodName][w][z][x] for methodName in methods]))
     
     barChart.update_coloraxes(showscale=False)
-    pio.kaleido.scope.default_width = 600
-    pio.kaleido.scope.default_height = 900
+    pio.defaults.default_width = 600
+    pio.defaults.default_height = 900
 
     barChart.update_layout(yaxis_title=yAxisTitle,
                            margin={'t':30, 'l':10, 'b':100, 'r':5},
@@ -1234,14 +1234,14 @@ def createDDI3DChart_old(results_directory, output_directory, mode):
         if chart is not histogramsAccepted[-1]:
             stackFigure.update_coloraxes(showscale=False)
             stackFigure.update_traces(showlegend=False)
-            pio.kaleido.scope.default_width = 250
-            pio.kaleido.scope.default_height = 300
+            pio.defaults.default_width = 250
+            pio.defaults.default_height = 300
             if settings.xAxisTitleAdjustment > 0:
                 xAxisTitle += ' ' * settings.xAxisTitleAdjustment
                 xAxisTitle += 't'
         else:
-            pio.kaleido.scope.default_width = 500
-            pio.kaleido.scope.default_height = 300
+            pio.defaults.default_width = 500
+            pio.defaults.default_height = 300
         
         if settings.xAxisTitleAdjustment > 0:
             xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1520,8 +1520,8 @@ def createDDI3DChart(results_directory, output_directory, mode):
         width=1200,
     )
 
-    pio.kaleido.scope.default_width = fig.layout.width
-    pio.kaleido.scope.default_height = fig.layout.height
+    pio.defaults.default_width = fig.layout.width
+    pio.defaults.default_height = fig.layout.height
 
     outputFile = os.path.join(output_directory, f"experiment-9-combined_chart_and_table_final_v1.pdf")
     pio.write_image(fig, outputFile, engine='kaleido', validate=True)
@@ -1642,8 +1642,8 @@ def executionTimeChart(results_directory, output_directory, mode):
 
             xAxisTitle = 'WorkloadSIze'
             chart.update_coloraxes(showscale=False)
-            pio.kaleido.scope.default_width = 600
-            pio.kaleido.scope.default_height = 600
+            pio.defaults.default_width = 600
+            pio.defaults.default_height = 600
 
             if settings.xAxisTitleAdjustment > 0:
                 xAxisTitle += ' ' * settings.xAxisTitleAdjustment
@@ -1722,8 +1722,8 @@ def executionTimeChart(results_directory, output_directory, mode):
 
         bar.update_coloraxes(showscale=False)
 
-        pio.kaleido.scope.default_width = 700 if i > 1 else 500
-        pio.kaleido.scope.default_height = 600
+        pio.defaults.default_width = 700 if i > 1 else 500
+        pio.defaults.default_height = 600
 
         bar.update_layout(
             barmode='group',
@@ -1813,8 +1813,8 @@ def executionTimeChart(results_directory, output_directory, mode):
     diag = go.Figure()
     diag.add_trace(go.Bar(x=methods, y=[diagram[method] for method in methods]))
     diag.update_coloraxes(showscale=False)
-    pio.kaleido.scope.default_width = 600
-    pio.kaleido.scope.default_height = 600
+    pio.defaults.default_width = 600
+    pio.defaults.default_height = 600
     if settings.xAxisTitleAdjustment > 0:
         xAxisTitle += ' ' * settings.xAxisTitleAdjustment
         xAxisTitle += 't'
