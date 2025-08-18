@@ -14,7 +14,7 @@ git clone https://github.com/bartvbl/SHREC2025-Partial-Retrieval-Benchmark-Repli
 ```
 You should subsequently run the python script to install dependencies, compile the project, and download precompiled cache files. You can use the following command to do so:
 ```
-python3 replicate.py
+python3 run_and_replicate.py
 ```
 Refer to the included PDF file for information about replicating the results produced for the paper.
 
@@ -22,6 +22,7 @@ Refer to the included PDF file for information about replicating the results pro
 * 32GB of RAM (64GB is highly recommended)
 * The project has been tested on Linux Mint 22.1.
 * The CUDA SDK must be installed, but no GPU is required to run the benchmark, except for methods that utilise machine learning
+* Python 3.10 or above
 
 There's nothing that should prevent the project to be compiled on Windows, but it has not been tested.
 
