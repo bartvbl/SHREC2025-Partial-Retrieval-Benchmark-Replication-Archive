@@ -645,7 +645,7 @@ def generateSupportRadiusChart(results_directory, output_directory):
 
             outputFile = os.path.join(output_directory, "support-radius-" + methodName + ".pdf")
 
-            pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
+            pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
     print('Done.')
 
 
@@ -730,7 +730,7 @@ def create2DChart(rawResults, configuration, settings, output_directory, jsonFil
     #stackFigure.show()
 
     outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + ".pdf")
-    pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+    pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
 
 
 
@@ -852,7 +852,7 @@ def createChart(results_directory, output_directory, mode):
                     outputFileIndex += 1
                     outputFile = os.path.join(output_directory,
                                               settings.experimentName + "-" + settings.methodName + '-' + str(outputFileIndex) + ".pdf")
-            pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+            pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
             
             # single DDI Chart
             DDIChart = go.Figure()
@@ -891,7 +891,7 @@ def createChart(results_directory, output_directory, mode):
                     outputFileIndex += 1
                     outputFile = os.path.join(output_directory,
                                               settings.experimentName + "-" + settings.methodName + '-' + str(outputFileIndex) + ".pdf")
-            pio.write_image(DDIChart, outputFile, engine="kaleido", validate=True)
+            pio.write_image(DDIChart, outputFile, format='pdf', validate=True)
 
     if not settings.enable2D and not settings.enable3D:
         print('Writing counts chart..')
@@ -914,7 +914,7 @@ def createChart(results_directory, output_directory, mode):
         outputFile = os.path.join(output_directory, lastSettings.experimentName + "-counts.pdf")
         pio.kaleido.scope.default_width = 435
         pio.kaleido.scope.default_height = 300
-        pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
+        pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
         return (chartAreas, settings.chartShortName)
 
     print('Done.')
@@ -941,7 +941,7 @@ def writeOverviewChart(contents, outputFile):
     countsFigure.update_layout(margin={'t': 0, 'l': 0, 'b': 0, 'r': 0}, font=dict(size=18), yaxis_title='Normalised DDI AUC')
     pio.kaleido.scope.default_width = 1400
     pio.kaleido.scope.default_height = 300
-    pio.write_image(countsFigure, outputFile, engine="kaleido", validate=True)
+    pio.write_image(countsFigure, outputFile, format='pdf', validate=True)
 
 #DDI Charts for multiple filters and not 
 
@@ -1037,7 +1037,7 @@ def createDDI2DChart(rawResults, settings, output_directory, jsonFilePath, jsonF
     stackFigure.update_xaxes(range=settings.xAxisBounds)
 
     outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + "-2DChart.pdf")
-    pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+    pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
  
 def createDDI3DChart_old(results_directory, output_directory, mode):
     jsonFilePaths = [x.name for x in os.scandir(results_directory) if x.name.endswith(".json")]
@@ -1261,7 +1261,7 @@ def createDDI3DChart_old(results_directory, output_directory, mode):
         stackFigure.update_yaxes(range=[0, 1])
 
         outputFile = os.path.join(output_directory, settings.experimentName + "-" + settings.methodName + "-3D" + str(cIndex) + "-Chart.pdf")
-        pio.write_image(stackFigure, outputFile, engine="kaleido", validate=True)
+        pio.write_image(stackFigure, outputFile, format='pdf', validate=True)
         '''
 
 def createDDI3DChart(results_directory, output_directory, mode):
@@ -1655,7 +1655,7 @@ def executionTimeChart(results_directory, output_directory, mode):
                                 yaxis=dict(autorange=False, automargin=True, dtick=yTick, range=[0, yAxisMax]))
 
             outputFile = os.path.join(output_directory, experimentName + "-experiment-" + str(i+1) + '-' + work + ".pdf")
-            pio.write_image(chart, outputFile, engine="kaleido", validate=True)
+            pio.write_image(chart, outputFile, format='pdf', validate=True)
 
 
     # Generating the bar chart
@@ -1822,7 +1822,7 @@ def executionTimeChart(results_directory, output_directory, mode):
     diag.update_layout(yaxis_title=f"Descriptor comparisons per seconds",
                         margin={'t': 35, 'l': 0, 'b': 45, 'r': 15}, font=dict(size=18),)
     outputFile = os.path.join(output_directory, "Comparison" + ".pdf")
-    pio.write_image(diag, outputFile, engine="kaleido", validate=True)            
+    pio.write_image(diag, outputFile, format='pdf', validate=True)            
                 
                 
                 
