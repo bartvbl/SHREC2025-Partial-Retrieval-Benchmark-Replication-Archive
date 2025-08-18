@@ -298,7 +298,6 @@ def changeReplicationSettings(config_file_to_edit):
         download_menu = TerminalMenu([
             'Compute or replicate experimental results: ' + generateReplicationSettingsString(config['replicationOverrides']['experiment']),
             'Compute or replicate reference descriptor set: ' + generateReplicationSettingsString(config['replicationOverrides']['referenceDescriptorSet']),
-            'Compute or replicate sample object unfiltered descriptor set: ' + generateReplicationSettingsString(config['replicationOverrides']['sampleDescriptorSet']),
             'Random seed used when selecting random subsets to replicate: ' + str(config['replicationOverrides']['replicationRandomSeed']),
             'Verify computed minimum bounding sphere of input objects: ' + ('enabled' if config['datasetSettings']['verifyFileIntegrity'] else 'disabled'),
             'Size of dataset file cache in GB: ' + str(config['datasetSettings']['cacheSizeLimitGB']),
@@ -315,17 +314,15 @@ def changeReplicationSettings(config_file_to_edit):
         if choice == 2:
             config['replicationOverrides']['referenceDescriptorSet'] = editSettings(config['replicationOverrides']['referenceDescriptorSet'], 'Reference Descriptor Set')
         if choice == 3:
-            config['replicationOverrides']['sampleDescriptorSet'] = editSettings(config['replicationOverrides']['sampleDescriptorSet'], 'Sample Object Unfiltered Descriptor Set')
-        if choice == 4:
             config['replicationOverrides']['replicationRandomSeed'] = selectReplicationRandomSeed(config['replicationOverrides']['replicationRandomSeed'])
-        if choice == 5:
+        if choice == 4:
             config['datasetSettings']['verifyFileIntegrity'] = not config['datasetSettings']['verifyFileIntegrity']
-        if choice == 6:
+        if choice == 5:
             print()
             newSize = int(input('Size of dataset file cache in GB: '))
             config['datasetSettings']['cacheSizeLimitGB'] = newSize
             print()
-        if choice == 7:
+        if choice == 6:
             print()
             chosenDirectory = input('Enter a directory path here. Write "choose" for a graphical file chooser: ')
             if chosenDirectory == "choose":
@@ -335,11 +332,11 @@ def changeReplicationSettings(config_file_to_edit):
                 root.withdraw()
                 chosenDirectory = filedialog.askdirectory()
             config['datasetSettings']['compressedRootDir'] = chosenDirectory
-        if choice == 8:
+        if choice == 7:
             config = applyThreadLimiter(config)
-        if choice == 9:
+        if choice == 8:
             config['verboseOutput'] = not config['verboseOutput']
-        if choice == 10:
+        if choice == 9:
             config['filterSettings']['additiveNoise']['enableDebugCamera'] = not config['filterSettings']['additiveNoise']['enableDebugCamera']
             if config['filterSettings']['additiveNoise']['enableDebugCamera']:
                 warningBox = TerminalMenu([
@@ -347,7 +344,7 @@ def changeReplicationSettings(config_file_to_edit):
 
                 warningBox.show()
 
-        if choice == 11:
+        if choice == 10:
             writeConfigFile(config, config_file_to_edit)
             return
 
