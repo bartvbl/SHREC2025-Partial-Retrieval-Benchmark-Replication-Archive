@@ -98,7 +98,6 @@ def installDependencies():
         "Install APT dependencies",
         "Install CUDA (note: should not be higher than version 12)",
         "Install Chromium (if you don't have Chrome available. Mandated by Kaleido, which generates charts)",
-        "Install conda",
         "Install pip/conda dependencies",
         "back"], title='------------------ Install Dependencies ------------------')
 
@@ -115,10 +114,10 @@ def installDependencies():
             print()
         if choice == 3:
             run_command_line_command('sudo apt install chromium')
+        #if choice == 4:
+        #    run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
+        #    run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
         if choice == 4:
-            run_command_line_command('wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output-document Miniforge3-Linux-x86_64.sh', 'input/download/')
-            run_command_line_command('/bin/bash Miniforge3-Linux-x86_64.sh', 'input/download/')
-        if choice == 5:
             run_command_line_command('python3 bin/conda-unpack', python_environments["GEDI"]["directory"])
             run_command_line_command('chmod +x bin/deactivate', python_environments["GEDI"]["directory"])
             # Conda is being a pain
@@ -133,7 +132,7 @@ def installDependencies():
             run_command_line_command_in_python_env('pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124', 'COPS', COPSBinDir)
             run_command_line_command_in_python_env('pip3 install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.6.0+cu124.html', 'COPS', COPSBinDir)
             print()
-        if choice == 6:
+        if choice == 5:
             return
 
 def compileProject():
