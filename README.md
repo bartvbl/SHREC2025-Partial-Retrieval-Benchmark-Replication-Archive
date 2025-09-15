@@ -2,9 +2,9 @@
 
 This is the code repository for the evaluation strategy described in the paper:
 
-(TODO)
+van Blokland BI, Aguirre I, Sipiran I, Bustos B, Biasotti S, Palmieri G. SHREC 2025: Partial retrieval benchmark. Computers & Graphics. 2025 Sep 6:104397.
 
-[Link to paper](https://todo)
+[Link to paper](https://www.sciencedirect.com/science/article/pii/S0097849325002389)
 
 ### Getting started
 
@@ -35,7 +35,14 @@ Partial retrieval is a long-standing problem in the 3D Object Retrieval communit
 ### Citation
 
 ```
-(TODO)
+@article{van2025shrec,
+  title={SHREC 2025: Partial retrieval benchmark},
+  author={van Blokland, Bart Iver and Aguirre, Isaac and Sipiran, Ivan and Bustos, Benjamin and Biasotti, Silvia and Palmieri, Giorgio},
+  journal={Computers \& Graphics},
+  pages={104397},
+  year={2025},
+  publisher={Elsevier}
+}
 ```
 
 ### Troubleshooting
