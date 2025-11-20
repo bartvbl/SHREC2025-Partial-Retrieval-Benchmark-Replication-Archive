@@ -83,13 +83,13 @@ def downloadDatasetsMenu():
         choice = download_menu.show() + 1
 
         if choice == 1 or choice == 2:
-            downloadFile('https://ntnu.box.com/shared/static/ql21r340osh00dqy4atbju2u13ojt4vz.7z',
+            downloadFile('https://zenodo.org/records/17662990/files/results_main.7z?download=1',
                          'precomputed_results.7z', 'precomputed_results/', 'Results computed by the authors')
         if choice == 1 or choice == 3:
-            downloadFile('https://ntnu.box.com/shared/static/p13szk6gx60zfi55qwmw4mkbifkx460p.7z', 'cache.7z',
+            downloadFile('https://zenodo.org/records/17662990/files/cache.7z?download=1', 'cache.7z',
                          'cache', 'Precomputed cache files')
         if choice == 1 or choice == 4:
-            downloadFile('https://ntnu.box.com/shared/static/b1jr4pmp0z7sbmwkvy5zsvqys0qzyf4g.gz', 'shapebench-gedi.tar.gz', python_environments["GEDI"]["directory"], 'prebuilt conda environment', 'tar -v -xzf {} -C .')
+            downloadFile('https://zenodo.org/records/17662990/files/shapebench-gedi-env.tar.gz?download=1', 'shapebench-gedi.tar.gz', python_environments["GEDI"]["directory"], 'prebuilt conda environment', 'tar -v -xzf {} -C .')
         if choice == 5:
             return
 
